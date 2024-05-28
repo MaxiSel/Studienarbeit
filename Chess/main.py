@@ -47,13 +47,19 @@ def main():
                     field_selected=()
                     player_clicks=[]
                 else:
-                    print('hi')
                     field_selected =(mouse_y_pos,mouse_x_pos)
-                    #if (game_status.checkField(field_selected)==True):
-                   #print(field_selected)
-                    player_clicks.append(field_selected)
-                    #else:
-                    #    game_status.checkField(field_selected)
+                    #print(game_status.board[1][1])
+                    #a=field_selected[0]
+                    #k=field_selected[1]
+                    #print(game_status.board[field_selected[0]][field_selected[1]])
+                    if(len(player_clicks)==0):
+                        if (game_status.checkField(field_selected)==True):
+                            player_clicks.append(field_selected)
+                        else:
+                            field_selected = ()
+                            player_clicks = []
+                    elif(len(player_clicks)==1):
+                        player_clicks.append(field_selected)
 
                 if(len(player_clicks)==2):
                     #print(field_selected[1])

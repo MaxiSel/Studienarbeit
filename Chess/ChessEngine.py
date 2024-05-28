@@ -32,13 +32,11 @@ class GameState():
         """
         Checks if mouse target field is empty
         """
-        if len(self.move_log)!=0:
-            game_situation=self.move_log[len(self.move_log)-1]
-            row = player_select_field[0]
-            column= player_select_field[1]
-            print(self.board[game_situation.player_select_field[0],[game_situation.player_select_field[1]]])
-            if self.board[player_select_field[0],[player_select_field[1]]]=='--':
-                return False
+            #print(self.board[player_select_field[0]][player_select_field[1]])
+        print('ka')
+        if self.board[player_select_field[0]][player_select_field[1]]=='--':
+            return False
+        print('Wa')
         return True
 
 
