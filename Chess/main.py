@@ -3,7 +3,7 @@ Main file to handle Input and Basic GUI for the user or testing
 """
 import pygame as p
 from Chess import ChessEngine
-WIDTH = HEIGHT = 1024
+WIDTH = HEIGHT = 512
 DIMENSION = 8
 SQUARE_Size=HEIGHT//DIMENSION
 Max_FPS=24
@@ -27,23 +27,54 @@ def main():
     screen = p.display.set_mode((WIDTH,HEIGHT))
     clock= p.time.Clock()
     screen.fill(p.Color('lightblue'))
-    gameStatus= ChessEngine.GameState()
+    game_status= ChessEngine.GameState()
     imageLoader()
     game_runs = True
+    field_selected=()
+    player_clicks=[]# Stores Player Mouse Click Input
+
 
     while game_runs:
         for e in p.event.get():
             if e.type == p.QUIT:
                 game_runs= False
-        drawGameState(screen,gameStatus)
+            elif e.type == p.MOUSEBUTTONDOWN:
+                mouse_pos=p.mouse.get_pos()
+                mouse_x_pos= mouse_pos[0]//SQUARE_Size
+                mouse_y_pos= mouse_pos[1]//SQUARE_Size
+               # print(mouse_x_pos,mouse_y_pos)
+                if(field_selected==(mouse_x_pos,mouse_y_pos)):
+                    field_selected=()
+                    player_clicks=[]
+                else:
+                    print('hi')
+                    field_selected =(mouse_y_pos,mouse_x_pos)
+                    #if (game_status.checkField(field_selected)==True):
+                   #print(field_selected)
+                    player_clicks.append(field_selected)
+                    #else:
+                    #    game_status.checkField(field_selected)
+
+                if(len(player_clicks)==2):
+                    #print(field_selected[1])
+                    mover=ChessEngine.MoveHandler(player_clicks[0],player_clicks[1],game_status.board)
+                    #print(mover.getChessNotation())
+                    game_status.movePiece(mover)
+                    field_selected=()
+                    player_clicks=[]
+            elif e.type==p.KEYDOWN:
+                if e.key == p.K_r:
+                    game_status.revertMove()
+
+        drawGameState(screen,game_status)
         clock.tick(Max_FPS)
         p.display.flip()
 """
 Draw the GUI for the chess board
 """
-def drawGameState(screen, gameStatus):
+def drawGameState(screen, game_status):
     drawBoard(screen)
-    drawPieces(screen,gameStatus.board)
+    drawPieces(screen,game_status.board)
 
 def drawBoard(screen):
     colors= p.Color('white'), p.Color('lightgray')
