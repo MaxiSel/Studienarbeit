@@ -63,16 +63,17 @@ def main():
                             player_clicks = []
                     elif(len(player_clicks)==1):
                         player_clicks.append(field_selected)
+                        game_status.calculateEveryMove()
 
                 if(len(player_clicks)==2):
                     #print(field_selected[1])
                     mover=ChessEngine.MoveHandler(player_clicks[0],player_clicks[1],game_status.board)
                     #print(mover.getChessNotation())
-                    if mover in possible_Moves:
-                        game_status.movePiece(mover)
-                        move_done=True
-                        field_selected=()
-                        player_clicks=[]
+                    #if mover in possible_Moves:
+                    game_status.movePiece(mover)
+                    move_done=True
+                    field_selected=()
+                    player_clicks=[]
             elif e.type==p.KEYDOWN:
                 if e.key == p.K_r:
                     game_status.revertMove()

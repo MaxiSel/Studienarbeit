@@ -2,7 +2,9 @@
 Handles the status of the game and the processing for the initial
 phase. Includes later a PGN (Portable Game Notation)
 """
-
+import sys
+sys.path.append('../Pieces')
+from Pieces import Pawn
 class GameState():
     def __init__(self):
         self.white_token=True
@@ -58,10 +60,13 @@ class GameState():
         for row in range(len(self.board)):
             for column in range(len(self.board[row])):
                 piece_color=self.board[row][column][0]
-                if(piece_color=='w' and self.white_token==True) and (piece_color=='b' and self.black_token==True):
+                #print(piece_color)
+                if(piece_color=='w' and self.white_token==True) or (piece_color=='b' and self.black_token==True):
                     piece_type = self.board[row][column][1]
+                    #print(piece_type)
                     if piece_type =='P':
-                        pass
+                        #print("HI")
+                        self.calculatePawn(row,column,moves)
                     elif piece_type =='K':
                         pass
                     elif piece_type =='B':
@@ -75,7 +80,11 @@ class GameState():
         return moves
 
     def calculatePawn(self,row,column,moves):
-        pass
+        #print(self.white_token)
+        if self.white_token==True:
+            test_pawn=Pawn.Pawn(row,column,'white',self.board)
+            #print("TR")
+            #print(test_pawn.board)
     def calculateKnight(self,row,column,moves):
         pass
     def calculateRock(self,row,column,moves):
