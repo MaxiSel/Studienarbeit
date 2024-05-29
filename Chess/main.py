@@ -29,7 +29,9 @@ def main():
     clock= p.time.Clock()
     screen.fill(p.Color('lightblue'))
     game_status= ChessEngine.GameState()
-    possible_Moves=game_status.calculateMoves()
+    possible_Moves = game_status.calculateEveryMove()
+    #for i in range(len(possible_Moves)):
+        #print(possible_Moves[i][1])
     move_done=False
     imageLoader()
     game_runs = True
@@ -68,18 +70,32 @@ def main():
                 if(len(player_clicks)==2):
                     #print(field_selected[1])
                     mover=ChessEngine.MoveHandler(player_clicks[0],player_clicks[1],game_status.board)
+                    print("HJU",mover.move_ID)
                     #print(mover.getChessNotation())
-                    #if mover in possible_Moves:
-                    game_status.movePiece(mover)
-                    move_done=True
-                    field_selected=()
-                    player_clicks=[]
+                    test= ChessEngine.MoveHandler((6,4),(4,4),game_status.board)
+                    #print(mover.move_ID==possible_Moves[1].move_ID)
+                    #print(test==possible_Moves[13])
+                    #print('chess',possible_Moves[1].move_ID)
+                    #print(test.move_ID==possible_Moves[13].move_ID)
+                    print(mover in possible_Moves)
+                    if mover in possible_Moves:
+                        print("yes")
+                        game_status.movePiece(mover)
+                        move_done=True
+                        field_selected=()
+                        player_clicks=[]
+                    else:
+                        print("HUH")
             elif e.type==p.KEYDOWN:
                 if e.key == p.K_r:
                     game_status.revertMove()
         if move_done==True:
-            possible_Moves=game_status.calculateMoves()
+            #possible_Moves=game_status.calculateMoves()
+            print('212',possible_Moves)
+            possible_Moves = game_status.calculateEveryMove()
+            print('501',possible_Moves)
             move_done = not move_done
+            print('move',move_done)
 
         drawGameState(screen,game_status)
         clock.tick(Max_FPS)

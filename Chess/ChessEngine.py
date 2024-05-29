@@ -27,8 +27,8 @@ class GameState():
             self.board[mover.origin_row][mover.origin_column]='--'
             self.board[mover.goal_field_row][mover.goal_field_column] = mover.active_piece
             self.move_log.append(mover)
-            self.white_token = not self.white_token
-            self.black_token = not self.black_token
+            #self.white_token = not self.white_token
+            #self.black_token = not self.black_token
 
     def checkField(self,player_select_field):
         """
@@ -44,8 +44,8 @@ class GameState():
             prev_move = self.move_log.pop()
             self.board[prev_move.origin_row][prev_move.origin_column] = prev_move.active_piece
             self.board[prev_move.goal_field_row][prev_move.goal_field_column] = prev_move.captured_piece
-            self.white_token = not self.white_token
-            self.black_token = not self.black_token
+            #self.white_token = not self.white_token
+            #self.black_token = not self.black_token
 
     def calculateMoves(self):
         pass
@@ -60,13 +60,16 @@ class GameState():
         for row in range(len(self.board)):
             for column in range(len(self.board[row])):
                 piece_color=self.board[row][column][0]
-                #print(piece_color)
                 if(piece_color=='w' and self.white_token==True) or (piece_color=='b' and self.black_token==True):
                     piece_type = self.board[row][column][1]
-                    #print(piece_type)
                     if piece_type =='P':
-                        #print("HI")
-                        self.calculatePawn(row,column,moves)
+                        print("UIU")
+                        #print(moves)
+                        #if len(moves)!=0:
+                         #   pass
+                            #print(moves[1].move_ID)
+                            #print(moves[1].origin_row,moves[1].origin_column,moves[1].goal_field_row,moves[1].goal_field_column)
+                        moves.append(self.calculatePawn(row,column,moves))
                     elif piece_type =='K':
                         pass
                     elif piece_type =='B':
@@ -83,8 +86,13 @@ class GameState():
         #print(self.white_token)
         if self.white_token==True:
             test_pawn=Pawn.Pawn(row,column,'white',self.board)
+            #print(moves)
+            moves.append(test_pawn.movement(moves))
+            #print(moves)
             #print("TR")
             #print(test_pawn.board)
+            del test_pawn
+            return moves
     def calculateKnight(self,row,column,moves):
         pass
     def calculateRock(self,row,column,moves):
@@ -116,10 +124,10 @@ class MoveHandler():
         """
         Overide ==
         """
-        def __eq__(self,other):
-            if isinstance(other,MoveHandler):
-                return self.move_ID == other.move_ID
-            return False
+    def __eq__(self,other):
+        if isinstance(other,MoveHandler):
+            return self.move_ID == other.move_ID
+        return False
 
 
     def getChessNotation(self):
