@@ -4,7 +4,7 @@ phase. Includes later a PGN (Portable Game Notation)
 """
 import sys
 sys.path.append('../Pieces')
-from Pieces import Pawn
+import Pieces
 class GameState():
     def __init__(self):
         self.white_token=True
@@ -14,13 +14,15 @@ class GameState():
         self.board= [
             ['bR','bN','bB','bQ','bK','bB','bN','bR'],
             ['bP','bP','bP','bP','bP','bP','bP','bP'],
-            ['--','--','--','--','--','--','--','--','--'],
-            ['--', '--', '--', '--', '--', '--', '--', '--', '--'],
-            ['--', '--', '--', '--', '--', '--', '--', '--', '--'],
-            ['--', '--', '--', '--', '--', '--', '--', '--', '--'],
-            ['wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP'],
+            ['--','--','--','--','--','--','--','--'],
+            ['--','--','--','--','--','--','--','--'],
+            ['--','--','--','--','--','--','--','--'],
+            ['--','--','--','--','--','--','--','--'],
+            ['wP','wP','wP','wP','wP','wP','wP','wP'],
             ['wR','wN','wB','wQ','wK','wB','wN','wR']
         ]
+        self.piece_map_function={'P':self.calculatePawn,'R':self.calculateRook,'K':self.calculateKing
+                                 ,'Q':self.calculateQueen,'N':self.calculateKnight,'B':self.calculateBishop}
         self.move_log=[]
     def movePiece(self,mover):
         if (self.board[mover.origin_row][mover.origin_column]!='--'):
@@ -42,10 +44,12 @@ class GameState():
     def revertMove(self):
         if len(self.move_log)!=0:
             prev_move = self.move_log.pop()
+            print(self.black_token, self.white_token)
             self.board[prev_move.origin_row][prev_move.origin_column] = prev_move.active_piece
             self.board[prev_move.goal_field_row][prev_move.goal_field_column] = prev_move.captured_piece
             self.white_token = not self.white_token
             self.black_token = not self.black_token
+            print('black',self.black_token,'white',self.white_token)
 
     def calculateMoves(self):
         pass
@@ -62,30 +66,19 @@ class GameState():
                 piece_color=self.board[row][column][0]
                 if(piece_color=='w' and self.white_token==True) or (piece_color=='b' and self.black_token==True):
                     piece_type = self.board[row][column][1]
-                    if piece_type =='P':
-                        print("UIU")
+                    self.piece_map_function[piece_type](row,column,moves)
                         #print(moves)
                         #if len(moves)!=0:
                          #   pass
                             #print(moves[1].move_ID)
                             #print(moves[1].origin_row,moves[1].origin_column,moves[1].goal_field_row,moves[1].goal_field_column)
-                        moves.append(self.calculatePawn(row,column,moves))
-                    elif piece_type =='K':
-                        pass
-                    elif piece_type =='B':
-                        pass
-                    elif piece_type =='R':
-                        pass
-                    elif piece_type =='Q':
-                        pass
-                    elif piece_type =='K':
-                        pass
+                        #moves.append(self.calculatePawn(row,column,moves))
         return moves
 
     def calculatePawn(self,row,column,moves):
         #print(self.white_token)
         if self.white_token==True:
-            test_pawn=Pawn.Pawn(row,column,'white',self.board)
+            test_pawn=Pieces.Pawn.Pawn(row,column,'white',self.board)
             #print(moves)
             moves.append(test_pawn.movement(moves))
             #print(moves)
@@ -93,7 +86,7 @@ class GameState():
             #print(test_pawn.board)
             del test_pawn
         if self.black_token==True:
-            test_pawn=Pawn.Pawn(row,column,'black',self.board)
+            test_pawn=Pieces.Pawn.Pawn(row,column,'black',self.board)
             #print(moves)
             moves.append(test_pawn.movement(moves))
             #print(moves)
@@ -102,15 +95,55 @@ class GameState():
             del test_pawn
         return moves
     def calculateKnight(self,row,column,moves):
-        pass
-    def calculateRock(self,row,column,moves):
-        pass
+        if self.white_token == True:
+            test_knight = Pieces.Knight.Knight(row, column, 'white', self.board)
+            moves.append(test_knight.movement(moves))
+            del test_knight
+        if self.black_token == True:
+            test_pawn = Pieces.Rook.Rook(row, column, 'black', self.board)
+            moves.append(test_pawn.movement(moves))
+            del test_pawn
+        return moves
+    def calculateRook(self,row,column,moves):
+        if self.white_token == True:
+            test_rook = Pieces.Rook.Rook(row, column, 'white', self.board)
+            moves.append(test_rook.movement(moves))
+            del test_rook
+        if self.black_token == True:
+            test_rook = Pieces.Rook.Rook(row, column, 'black', self.board)
+            moves.append(test_rook.movement(moves))
+            del test_rook
+        return moves
     def calculateBishop(self,row,column,moves):
-        pass
+        if self.white_token == True:
+            test_bishop = Pieces.Bishop.Bishop(row, column, 'white', self.board)
+            moves.append(test_bishop.movement(moves))
+            del test_bishop
+        if self.black_token == True:
+            test_bishop = Pieces.Bishop.Bishop(row, column, 'black', self.board)
+            moves.append(test_bishop.movement(moves))
+            del test_bishop
+        return moves
     def calculateQueen(self,row,column,moves):
-        pass
+        if self.white_token == True:
+            test_knight = Pieces.Knight.Knight(row, column, 'white', self.board)
+            moves.append(test_knight.movement(moves))
+            del test_knight
+        if self.black_token == True:
+            test_pawn = Pieces.Rook.Rook(row, column, 'black', self.board)
+            moves.append(test_pawn.movement(moves))
+            del test_pawn
+        return moves
     def calculateKing(self,row,column,moves):
-        pass
+        if self.white_token == True:
+            test_knight = Pieces.Knight.Knight(row, column, 'white', self.board)
+            moves.append(test_knight.movement(moves))
+            del test_knight
+        if self.black_token == True:
+            test_pawn = Pieces.Rook.Rook(row, column, 'black', self.board)
+            moves.append(test_pawn.movement(moves))
+            del test_pawn
+        return moves
 
 
 class MoveHandler():

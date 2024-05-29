@@ -72,7 +72,7 @@ def main():
                     mover=ChessEngine.MoveHandler(player_clicks[0],player_clicks[1],game_status.board)
                     print("HJU",mover.move_ID)
                     #print(mover.getChessNotation())
-                    test= ChessEngine.MoveHandler((6,4),(4,4),game_status.board)
+                    #test= ChessEngine.MoveHandler((6,4),(4,4),game_status.board)
                     #print(mover.move_ID==possible_Moves[1].move_ID)
                     #print(test==possible_Moves[13])
                     #print('chess',possible_Moves[1].move_ID)
@@ -90,6 +90,9 @@ def main():
             elif e.type==p.KEYDOWN:
                 if e.key == p.K_r:
                     game_status.revertMove()
+                    field_selected = ()
+                    player_clicks = []
+                    possible_Moves = game_status.calculateEveryMove()
         if move_done==True:
             #possible_Moves=game_status.calculateMoves()
             print('212',possible_Moves)

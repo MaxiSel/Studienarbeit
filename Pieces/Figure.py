@@ -5,5 +5,5 @@ class ChessPiece():
         self.color=color
         self.board=board
 
-    def move(self):
+    def movement(self,moves):
         pass
