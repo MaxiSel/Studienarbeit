@@ -44,7 +44,7 @@ class Bishop(ChessPiece):
             if self.board[row_counter][column_counter] == '--':
                 moves.append(
                     ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))
-            elif self.board[row_counter][column_counter][0] == 'b':
+            elif self.board[row_counter][column_counter][0] == self.enermy_color:
                 moves.append(
                     ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))
                 break
@@ -56,7 +56,7 @@ class Bishop(ChessPiece):
             if self.board[row_counter][column_counter] == '--':
                 moves.append(
                     ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))
-            elif self.board[row_counter][column_counter][0] == 'b':
+            elif self.board[row_counter][column_counter][0] == self.enermy_color:
                 moves.append(
                     ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))
                 break

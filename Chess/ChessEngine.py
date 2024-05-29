@@ -100,9 +100,9 @@ class GameState():
             moves.append(test_knight.movement(moves))
             del test_knight
         if self.black_token == True:
-            test_pawn = Pieces.Rook.Rook(row, column, 'black', self.board)
-            moves.append(test_pawn.movement(moves))
-            del test_pawn
+            test_knight = Pieces.Knight.Knight(row, column, 'black', self.board)
+            moves.append(test_knight.movement(moves))
+            del test_knight
         return moves
     def calculateRook(self,row,column,moves):
         if self.white_token == True:
@@ -126,23 +126,23 @@ class GameState():
         return moves
     def calculateQueen(self,row,column,moves):
         if self.white_token == True:
-            test_knight = Pieces.Knight.Knight(row, column, 'white', self.board)
-            moves.append(test_knight.movement(moves))
-            del test_knight
+            test_queen = Pieces.Queen.Queen(row, column, 'white', self.board)
+            moves.append(test_queen.movement(moves))
+            del test_queen
         if self.black_token == True:
-            test_pawn = Pieces.Rook.Rook(row, column, 'black', self.board)
-            moves.append(test_pawn.movement(moves))
-            del test_pawn
+            test_queen = Pieces.Queen.Queen(row, column, 'black', self.board)
+            moves.append(test_queen.movement(moves))
+            del test_queen
         return moves
     def calculateKing(self,row,column,moves):
         if self.white_token == True:
-            test_knight = Pieces.Knight.Knight(row, column, 'white', self.board)
-            moves.append(test_knight.movement(moves))
-            del test_knight
+            test_king = Pieces.King.King(row, column, 'white', self.board)
+            moves.append(test_king.movement(moves))
+            del test_king
         if self.black_token == True:
-            test_pawn = Pieces.Rook.Rook(row, column, 'black', self.board)
-            moves.append(test_pawn.movement(moves))
-            del test_pawn
+            test_king = Pieces.King.King(row, column, 'black', self.board)
+            moves.append(test_king.movement(moves))
+            del test_king
         return moves
 
 
