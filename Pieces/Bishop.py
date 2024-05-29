@@ -4,9 +4,9 @@ from Chess import ChessEngine
 
 class Bishop(ChessPiece):
     def __init__(self, row, column, color, board):
-        if self.color == 'white':
+        if color == 'white':
             self.enermy_color = 'b'
-        elif self.color == 'black':
+        elif color == 'black':
             self.enermy_color = 'w'
         super(Bishop, self).__init__(row, column, color, board)
 
