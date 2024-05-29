@@ -2,6 +2,7 @@
 Main file to handle Input and Basic GUI for the user or testing
 """
 import pygame as p
+#from Pieces import Pawn
 from Chess import ChessEngine
 WIDTH = HEIGHT = 512
 DIMENSION = 8
@@ -28,6 +29,8 @@ def main():
     clock= p.time.Clock()
     screen.fill(p.Color('lightblue'))
     game_status= ChessEngine.GameState()
+    possible_Moves=game_status.calculateMoves()
+    move_done=False
     imageLoader()
     game_runs = True
     field_selected=()
@@ -65,12 +68,17 @@ def main():
                     #print(field_selected[1])
                     mover=ChessEngine.MoveHandler(player_clicks[0],player_clicks[1],game_status.board)
                     #print(mover.getChessNotation())
-                    game_status.movePiece(mover)
-                    field_selected=()
-                    player_clicks=[]
+                    if mover in possible_Moves:
+                        game_status.movePiece(mover)
+                        move_done=True
+                        field_selected=()
+                        player_clicks=[]
             elif e.type==p.KEYDOWN:
                 if e.key == p.K_r:
                     game_status.revertMove()
+        if move_done==True:
+            possible_Moves=game_status.calculateMoves()
+            move_done = not move_done
 
         drawGameState(screen,game_status)
         clock.tick(Max_FPS)

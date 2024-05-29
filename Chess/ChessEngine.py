@@ -25,18 +25,15 @@ class GameState():
             self.board[mover.origin_row][mover.origin_column]='--'
             self.board[mover.goal_field_row][mover.goal_field_column] = mover.active_piece
             self.move_log.append(mover)
-            self.white_token != self.white_token
-            self.black_token != self.black_token
+            self.white_token = not self.white_token
+            self.black_token = not self.black_token
 
     def checkField(self,player_select_field):
         """
         Checks if mouse target field is empty
         """
-            #print(self.board[player_select_field[0]][player_select_field[1]])
-        print('ka')
         if self.board[player_select_field[0]][player_select_field[1]]=='--':
             return False
-        print('Wa')
         return True
 
 
@@ -45,8 +42,50 @@ class GameState():
             prev_move = self.move_log.pop()
             self.board[prev_move.origin_row][prev_move.origin_column] = prev_move.active_piece
             self.board[prev_move.goal_field_row][prev_move.goal_field_column] = prev_move.captured_piece
-            self.white_token!=self.white_token
-            self.black_token!=self.black_token
+            self.white_token = not self.white_token
+            self.black_token = not self.black_token
+
+    def calculateMoves(self):
+        pass
+
+    def calculateEveryMove(self):
+        """
+        Includes every theoretical move, also moves which would end in a checkmate, these needs to be
+        cut by the calling method
+        :return:
+        """
+        moves =[]
+        for row in range(len(self.board)):
+            for column in range(len(self.board[row])):
+                piece_color=self.board[row][column][0]
+                if(piece_color=='w' and self.white_token==True) and (piece_color=='b' and self.black_token==True):
+                    piece_type = self.board[row][column][1]
+                    if piece_type =='P':
+                        pass
+                    elif piece_type =='K':
+                        pass
+                    elif piece_type =='B':
+                        pass
+                    elif piece_type =='R':
+                        pass
+                    elif piece_type =='Q':
+                        pass
+                    elif piece_type =='K':
+                        pass
+        return moves
+
+    def calculatePawn(self,row,column,moves):
+        pass
+    def calculateKnight(self,row,column,moves):
+        pass
+    def calculateRock(self,row,column,moves):
+        pass
+    def calculateBishop(self,row,column,moves):
+        pass
+    def calculateQueen(self,row,column,moves):
+        pass
+    def calculateKing(self,row,column,moves):
+        pass
 
 
 class MoveHandler():
@@ -62,6 +101,16 @@ class MoveHandler():
         self.goal_field_column = goal_field[1]
         self.active_piece=board[self.origin_row][self.origin_column]
         self.captured_piece=board[self.goal_field_row][self.goal_field_column]
+        self.move_ID= self.origin_row*1000+self.origin_column*100+self.goal_field_row*10+self.goal_field_column
+
+
+        """
+        Overide ==
+        """
+        def __eq__(self,other):
+            if isinstance(other,MoveHandler):
+                return self.move_ID == other.move_ID
+            return False
 
 
     def getChessNotation(self):
