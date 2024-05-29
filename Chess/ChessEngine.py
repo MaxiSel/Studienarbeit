@@ -27,8 +27,8 @@ class GameState():
             self.board[mover.origin_row][mover.origin_column]='--'
             self.board[mover.goal_field_row][mover.goal_field_column] = mover.active_piece
             self.move_log.append(mover)
-            #self.white_token = not self.white_token
-            #self.black_token = not self.black_token
+            self.white_token = not self.white_token
+            self.black_token = not self.black_token
 
     def checkField(self,player_select_field):
         """
@@ -44,8 +44,8 @@ class GameState():
             prev_move = self.move_log.pop()
             self.board[prev_move.origin_row][prev_move.origin_column] = prev_move.active_piece
             self.board[prev_move.goal_field_row][prev_move.goal_field_column] = prev_move.captured_piece
-            #self.white_token = not self.white_token
-            #self.black_token = not self.black_token
+            self.white_token = not self.white_token
+            self.black_token = not self.black_token
 
     def calculateMoves(self):
         pass
@@ -92,7 +92,15 @@ class GameState():
             #print("TR")
             #print(test_pawn.board)
             del test_pawn
-            return moves
+        if self.black_token==True:
+            test_pawn=Pawn.Pawn(row,column,'black',self.board)
+            #print(moves)
+            moves.append(test_pawn.movement(moves))
+            #print(moves)
+            #print("TR")
+            #print(test_pawn.board)
+            del test_pawn
+        return moves
     def calculateKnight(self,row,column,moves):
         pass
     def calculateRock(self,row,column,moves):

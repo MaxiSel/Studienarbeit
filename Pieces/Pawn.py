@@ -12,12 +12,14 @@ class Pawn(ChessPiece):
                 print(moves)
                 if self.row == 6 and self.board[self.row-2][self.column]:
                     moves.append(ChessEngine.MoveHandler((self.row,self.column),(self.row-2,self.column),self.board))
-                    #print(moves)
-            if(len(moves)!=0):
-                pass
-                #print(moves[0])
             return moves
         elif self.color=='black':
-            pass
+            if self.board[self.row + 1][self.column] == '--':
+                # print(ChessEngine.MoveHandler((self.row,self.column),(self.row-1,self.column),self.board))
+                moves.append(ChessEngine.MoveHandler((self.row, self.column), (self.row + 1, self.column), self.board))
+                print(moves)
+                if self.row == 1 and self.board[self.row + 2][self.column]:
+                    moves.append(
+                        ChessEngine.MoveHandler((self.row, self.column), (self.row + 2, self.column), self.board))
         else:
             raise ValueError('undefinied Chess piece color')
