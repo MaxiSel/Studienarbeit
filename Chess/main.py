@@ -85,7 +85,8 @@ def main():
                         field_selected=()
                         player_clicks=[]
                     else:
-                        print("HUH")
+                        field_selected = ()
+                        player_clicks = []
             elif e.type==p.KEYDOWN:
                 if e.key == p.K_r:
                     game_status.revertMove()
