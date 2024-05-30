@@ -12,7 +12,7 @@ class Rook(ChessPiece):
         column_counter = self.column
         while (row_counter <= 6):
             row_counter += 1
-            print(row_counter, column_counter)
+            #print(row_counter, column_counter)
             if self.board[row_counter][column_counter] == '--':
                 moves.append(
                     ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))

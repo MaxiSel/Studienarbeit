@@ -44,12 +44,12 @@ class GameState():
     def revertMove(self):
         if len(self.move_log)!=0:
             prev_move = self.move_log.pop()
-            print(self.black_token, self.white_token)
+            #print(self.black_token, self.white_token)
             self.board[prev_move.origin_row][prev_move.origin_column] = prev_move.active_piece
             self.board[prev_move.goal_field_row][prev_move.goal_field_column] = prev_move.captured_piece
             self.white_token = not self.white_token
             self.black_token = not self.black_token
-            print('black',self.black_token,'white',self.white_token)
+            #print('black',self.black_token,'white',self.white_token)
 
     def calculateMoves(self):
         pass

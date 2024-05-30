@@ -56,6 +56,8 @@ def main():
                     #print(game_status.board[1][1])
                     #a=field_selected[0]
                     #k=field_selected[1]
+                    print(field_selected)
+                    print(player_clicks)
                     #print(game_status.board[field_selected[0]][field_selected[1]])
                     if(len(player_clicks)==0):
                         if (game_status.checkField(field_selected)==True):
@@ -67,23 +69,36 @@ def main():
                         player_clicks.append(field_selected)
                         game_status.calculateEveryMove()
 
+                        #print(game_status.board[player_clicks[0]][player_clicks[1]][0])
+                        if(((game_status.white_token == True) and(game_status.board[player_clicks[1][0]][player_clicks[1][1]][0] == 'w'))
+                                or ((game_status.black_token == True) and
+                                    (game_status.board[player_clicks[1][0]][player_clicks[1][1]][0] == 'b'))):
+                            field_selected = ()
+                            del player_clicks[0]  # Lenght is everytime 2
+                            continue
+
                 if(len(player_clicks)==2):
                     #print(field_selected[1])
+                    if game_status.board[player_clicks[0][1]]=='--':
+                        field_selected=()
+                        del player_clicks[0]#Lenght is everytime 2
+                        continue
                     mover=ChessEngine.MoveHandler(player_clicks[0],player_clicks[1],game_status.board)
-                    print("HJU",mover.move_ID)
+
                     #print(mover.getChessNotation())
                     #test= ChessEngine.MoveHandler((6,4),(4,4),game_status.board)
                     #print(mover.move_ID==possible_Moves[1].move_ID)
                     #print(test==possible_Moves[13])
                     #print('chess',possible_Moves[1].move_ID)
                     #print(test.move_ID==possible_Moves[13].move_ID)
-                    print(mover in possible_Moves)
+                    #print(mover in possible_Moves)
                     if mover in possible_Moves:
-                        print("yes")
+                        print('ja')
                         game_status.movePiece(mover)
                         move_done=True
                         field_selected=()
                         player_clicks=[]
+
                     else:
                         field_selected = ()
                         player_clicks = []
@@ -95,11 +110,11 @@ def main():
                     possible_Moves = game_status.calculateEveryMove()
         if move_done==True:
             #possible_Moves=game_status.calculateMoves()
-            print('212',possible_Moves)
+            #print('212',possible_Moves)
             possible_Moves = game_status.calculateEveryMove()
-            print('501',possible_Moves)
+            #print('501',possible_Moves)
             move_done = not move_done
-            print('move',move_done)
+            #print('move',move_done)
 
         drawGameState(screen,game_status)
         clock.tick(Max_FPS)
