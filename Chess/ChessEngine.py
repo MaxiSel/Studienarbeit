@@ -3,56 +3,168 @@ Handles the status of the game and the processing for the initial
 phase. Includes later a PGN (Portable Game Notation)
 """
 import sys
+
 sys.path.append('../Pieces')
 import Pieces
+
+
 class GameState():
     def __init__(self):
-        self.white_token=True
-        self.black_token=False
-        self.white_rochade_token=True
-        self.black_rochade_token=True
-        self.board= [
-            ['bR','bN','bB','bQ','bK','bB','bN','bR'],
-            ['bP','bP','bP','bP','bP','bP','bP','bP'],
-            ['--','--','--','--','--','--','--','--'],
-            ['--','--','--','--','--','--','--','--'],
-            ['--','--','--','--','--','--','--','--'],
-            ['--','--','--','--','--','--','--','--'],
-            ['wP','wP','wP','wP','wP','wP','wP','wP'],
-            ['wR','wN','wB','wQ','wK','wB','wN','wR']
+        self.white_token = True
+        self.black_token = False
+        self.white_rochade_token = True
+        self.black_rochade_token = True
+        self.board = [
+            ['bR', 'bN', 'bB', 'bQ', 'bK', 'bB', 'bN', 'bR'],
+            ['bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP'],
+            ['--', '--', '--', '--', '--', '--', '--', '--'],
+            ['--', '--', '--', '--', '--', '--', '--', '--'],
+            ['--', '--', '--', '--', '--', '--', '--', '--'],
+            ['--', '--', '--', '--', '--', '--', '--', '--'],
+            ['wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP'],
+            ['wR', 'wN', 'wB', 'wQ', 'wK', 'wB', 'wN', 'wR']
         ]
-        self.piece_map_function={'P':self.calculatePawn,'R':self.calculateRook,'K':self.calculateKing
-                                 ,'Q':self.calculateQueen,'N':self.calculateKnight,'B':self.calculateBishop}
-        self.move_log=[]
-    def movePiece(self,mover):
-        if (self.board[mover.origin_row][mover.origin_column]!='--'):
-            self.board[mover.origin_row][mover.origin_column]='--'
+        self.piece_map_function = {'P': self.calculatePawn, 'R': self.calculateRook, 'K': self.calculateKing
+            , 'Q': self.calculateQueen, 'N': self.calculateKnight, 'B': self.calculateBishop}
+        self.move_log = []
+        self.white_king_position = (7, 4)
+        self.black_king_position = (0, 4)
+        self.check_mate = False
+        self.Patt = False
+        self.inCheck = False
+        self.pins = []
+        self.checks = []
+
+    def movePiece(self, mover):
+        if (self.board[mover.origin_row][mover.origin_column] != '--'):
+            self.board[mover.origin_row][mover.origin_column] = '--'
             self.board[mover.goal_field_row][mover.goal_field_column] = mover.active_piece
             self.move_log.append(mover)
             self.white_token = not self.white_token
             self.black_token = not self.black_token
+            # Update king, later with objects shifted
+            if mover.active_piece == 'wK':
+                self.white_king_position = (mover.goal_field_row, mover.goal_field_column)
+            elif mover.active_piece == 'bK':
+                self.black_king_position = (mover.goal_field_row, mover.goal_field_column)
 
-    def checkField(self,player_select_field):
+    def checkField(self, player_select_field):
         """
         Checks if mouse target field is empty
         """
-        if self.board[player_select_field[0]][player_select_field[1]]=='--':
+        if self.board[player_select_field[0]][player_select_field[1]] == '--':
             return False
         return True
 
-
     def revertMove(self):
-        if len(self.move_log)!=0:
+        if len(self.move_log) != 0:
             prev_move = self.move_log.pop()
-            #print(self.black_token, self.white_token)
+            # print(self.black_token, self.white_token)
             self.board[prev_move.origin_row][prev_move.origin_column] = prev_move.active_piece
             self.board[prev_move.goal_field_row][prev_move.goal_field_column] = prev_move.captured_piece
             self.white_token = not self.white_token
             self.black_token = not self.black_token
-            #print('black',self.black_token,'white',self.white_token)
+            # print('black',self.black_token,'white',self.white_token)
+            # Update king, later with objects shifted
+            if prev_move.active_piece == 'wK':
+                self.white_king_position = (prev_move.origin_row, prev_move.origin_column)
+            elif prev_move.active_piece == 'bK':
+                self.black_king_position = (prev_move.origin_row, prev_move.origin_column)
 
     def calculateMoves(self):
-        pass
+        moves = []
+        self.inCheck, self.pins, self.checks = self.checkForPinsAndChecks()
+        if self.white_token:
+            king_row=self.white_king_position[0]
+            king_column = self.white_king_position[1]
+        elif self.black_token:
+            king_row=self.black_king_position[0]
+            king_column = self.black_king_position[1]
+        if self.inCheck:
+            if len(self.checks)==1:
+                moves =self.calculateEveryMove()
+                check=self.checks[0]
+                check_row=check[0]
+                check_column=check[1]
+                piece_check_giver=self.board[check_row][check_column]
+                valid_fields=[]
+                if piece_check_giver[1]=='N':
+                    valid_fields=[(check_row,check_column)]
+                else:
+                    for i in range(1,8):
+                        valid_field=(king_row+check[2]*i,king_column+check[3]*i)
+                        valid_fields.appen(valid_field)
+                        if valid_field[0]==check_row and valid_field[1]==check_column:
+                            break
+                for i in range(len(moves)-1,-1,-1):
+                    if moves[i].active_piece!='K':
+                        if not(moves[i].goal_field_row,moves[i].goal_field_column) in valid_fields:
+                            moves.remove(moves[i])
+            else:
+                self.calculateKing(king_row,king_column,moves)
+        else:
+            moves=self.calculateEveryMove()
+
+
+
+    def checkForPinsAndChecks(self):
+        pins = []
+        checks = []
+        in_check = False
+        enermy_color = ''
+        allied_color=''
+        origin_row = self.white_king_position[0]
+        origin_column = self.white_king_position[1]
+        if self.white_token:
+            enermy_color = 'b'
+            allied_color = 'w'
+        elif self.black_token:
+            enermy_color = 'w'
+            allied_color = 'b'
+
+        directions = ((-1, 0), (0, -1), (1, 0), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1))
+        for j in range(len(directions)):
+            d = directions[j]
+            possible_pin = ()
+            for i in range(1, 8):
+                goal_field_row = origin_row + d[0] * i
+                goal_field_column = origin_column + d[0] * i
+                if 0 <= goal_field_row < 8 and 0 <= goal_field_column < 8:
+                    collide_piece = self.board[goal_field_row][goal_field_column]
+                    if collide_piece[0] == allied_color:
+                        if possible_pin == ():
+                            possible_pin = (goal_field_row, goal_field_column, d[0], d[1])
+                        else:
+                            break
+                    elif collide_piece[0] == enermy_color:
+                        piece_type = collide_piece[1]
+                        if (0 <= j < 3 and piece_type == 'R') \
+                                or (4 <= j <= 7 and piece_type == 'B') or \
+                                (i == i and piece_type == 'P'
+                                 and ((enermy_color == 'w' and 6 <= j <= 7) or
+                                      (enermy_color == 'b' and 4 <= j <= 5))) or (piece_type == 'Q') or (
+                                i == 1 and piece_type == 'K'):
+                            if possible_pin==():
+                                in_check=True
+                                checks.append((goal_field_row,goal_field_column,d[0],d[1]))
+                                break
+                            else:
+                                pins.append(possible_pin)
+                                break
+                        else:
+                            break
+                else:
+                    break
+        knight_movement=((-2,-1),(-2,1),(-1,-2),(-1,2),(1,-2),(1,2),(2,-1),(2,1))
+        for m in knight_movement:
+            goal_field_row=origin_row+m[0]
+            goal_field_column = origin_row + m[1]
+            if 0<= goal_field_row<=7 and 0<=goal_field_column<=7:
+                collide_piece=self.board[goal_field_row][goal_field_column]
+                if collide_piece[0]==enermy_color and collide_piece[1]=='N':
+                    in_check=True
+                    checks.append((goal_field_row,goal_field_column,m[0],m[1]))
+        return in_check,pins,checks
 
     def calculateEveryMove(self):
         """
@@ -60,41 +172,43 @@ class GameState():
         cut by the calling method
         :return:
         """
-        moves =[]
+        moves = []
         for row in range(len(self.board)):
             for column in range(len(self.board[row])):
-                piece_color=self.board[row][column][0]
-                if(piece_color=='w' and self.white_token==True) or (piece_color=='b' and self.black_token==True):
+                piece_color = self.board[row][column][0]
+                if (piece_color == 'w' and self.white_token == True) or (
+                        piece_color == 'b' and self.black_token == True):
                     piece_type = self.board[row][column][1]
-                    self.piece_map_function[piece_type](row,column,moves)
-                        #print(moves)
-                        #if len(moves)!=0:
-                         #   pass
-                            #print(moves[1].move_ID)
-                            #print(moves[1].origin_row,moves[1].origin_column,moves[1].goal_field_row,moves[1].goal_field_column)
-                        #moves.append(self.calculatePawn(row,column,moves))
+                    self.piece_map_function[piece_type](row, column, moves)
+                    # print(moves)
+                    # if len(moves)!=0:
+                    #   pass
+                    # print(moves[1].move_ID)
+                    # print(moves[1].origin_row,moves[1].origin_column,moves[1].goal_field_row,moves[1].goal_field_column)
+                    # moves.append(self.calculatePawn(row,column,moves))
         return moves
 
-    def calculatePawn(self,row,column,moves):
-        #print(self.white_token)
-        if self.white_token==True:
-            test_pawn=Pieces.Pawn.Pawn(row,column,'white',self.board)
-            #print(moves)
+    def calculatePawn(self, row, column, moves):
+        # print(self.white_token)
+        if self.white_token == True:
+            test_pawn = Pieces.Pawn.Pawn(row, column, 'white', self.board)
+            # print(moves)
             moves.append(test_pawn.movement(moves))
-            #print(moves)
-            #print("TR")
-            #print(test_pawn.board)
+            # print(moves)
+            # print("TR")
+            # print(test_pawn.board)
             del test_pawn
-        if self.black_token==True:
-            test_pawn=Pieces.Pawn.Pawn(row,column,'black',self.board)
-            #print(moves)
+        if self.black_token == True:
+            test_pawn = Pieces.Pawn.Pawn(row, column, 'black', self.board)
+            # print(moves)
             moves.append(test_pawn.movement(moves))
-            #print(moves)
-            #print("TR")
-            #print(test_pawn.board)
+            # print(moves)
+            # print("TR")
+            # print(test_pawn.board)
             del test_pawn
         return moves
-    def calculateKnight(self,row,column,moves):
+
+    def calculateKnight(self, row, column, moves):
         if self.white_token == True:
             test_knight = Pieces.Knight.Knight(row, column, 'white', self.board)
             moves.append(test_knight.movement(moves))
@@ -104,7 +218,8 @@ class GameState():
             moves.append(test_knight.movement(moves))
             del test_knight
         return moves
-    def calculateRook(self,row,column,moves):
+
+    def calculateRook(self, row, column, moves):
         if self.white_token == True:
             test_rook = Pieces.Rook.Rook(row, column, 'white', self.board)
             moves.append(test_rook.movement(moves))
@@ -114,7 +229,8 @@ class GameState():
             moves.append(test_rook.movement(moves))
             del test_rook
         return moves
-    def calculateBishop(self,row,column,moves):
+
+    def calculateBishop(self, row, column, moves):
         if self.white_token == True:
             test_bishop = Pieces.Bishop.Bishop(row, column, 'white', self.board)
             moves.append(test_bishop.movement(moves))
@@ -124,7 +240,8 @@ class GameState():
             moves.append(test_bishop.movement(moves))
             del test_bishop
         return moves
-    def calculateQueen(self,row,column,moves):
+
+    def calculateQueen(self, row, column, moves):
         if self.white_token == True:
             test_queen = Pieces.Queen.Queen(row, column, 'white', self.board)
             moves.append(test_queen.movement(moves))
@@ -134,7 +251,8 @@ class GameState():
             moves.append(test_queen.movement(moves))
             del test_queen
         return moves
-    def calculateKing(self,row,column,moves):
+
+    def calculateKing(self, row, column, moves):
         if self.white_token == True:
             test_king = Pieces.King.King(row, column, 'white', self.board)
             moves.append(test_king.movement(moves))
@@ -147,36 +265,33 @@ class GameState():
 
 
 class MoveHandler():
-    chess_row_to_base_notation_row ={'1':7,'2':6,'3':5,'4':4,'5':3,'6':2,'7':1,'8':0}
-    base_notation_row_to_chess_row = {v:k for k,v in chess_row_to_base_notation_row.items()}
-    chess_column_to_base_notation_column = {'a':0,'b':1,'c':2,'d':3,'e':4,'f':5,'g':6,'h':7,}
-    base_notation_column_to_chess_column={v:k for k,v in chess_column_to_base_notation_column.items()}
+    chess_row_to_base_notation_row = {'1': 7, '2': 6, '3': 5, '4': 4, '5': 3, '6': 2, '7': 1, '8': 0}
+    base_notation_row_to_chess_row = {v: k for k, v in chess_row_to_base_notation_row.items()}
+    chess_column_to_base_notation_column = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7, }
+    base_notation_column_to_chess_column = {v: k for k, v in chess_column_to_base_notation_column.items()}
 
-    def __init__(self,origin_field,goal_field,board):
-        self.origin_row=origin_field[0]
-        self.origin_column=origin_field[1]
-        self.goal_field_row=goal_field[0]
+    def __init__(self, origin_field, goal_field, board):
+        self.origin_row = origin_field[0]
+        self.origin_column = origin_field[1]
+        self.goal_field_row = goal_field[0]
         self.goal_field_column = goal_field[1]
-        self.active_piece=board[self.origin_row][self.origin_column]
-        self.captured_piece=board[self.goal_field_row][self.goal_field_column]
-        self.move_ID= self.origin_row*1000+self.origin_column*100+self.goal_field_row*10+self.goal_field_column
-
+        self.active_piece = board[self.origin_row][self.origin_column]
+        self.captured_piece = board[self.goal_field_row][self.goal_field_column]
+        self.move_ID = self.origin_row * 1000 + self.origin_column * 100 + self.goal_field_row * 10 + self.goal_field_column
 
         """
         Overide ==
         """
-    def __eq__(self,other):
-        if isinstance(other,MoveHandler):
+
+    def __eq__(self, other):
+        if isinstance(other, MoveHandler):
             return self.move_ID == other.move_ID
         return False
 
-
     def getChessNotation(self):
         # only video implemnt. Real PGN needs to be reviewed and added
-        return self.getRowColumn(self.origin_row,self.origin_column) + self.getRowColumn(self.goal_field_row,self.goal_field_column)
+        return self.getRowColumn(self.origin_row, self.origin_column) + self.getRowColumn(self.goal_field_row,
+                                                                                          self.goal_field_column)
 
-
-    def getRowColumn(self,row,column):
-        return self.base_notation_column_to_chess_column[column] +self.base_notation_row_to_chess_row[row]
-
-
+    def getRowColumn(self, row, column):
+        return self.base_notation_column_to_chess_column[column] + self.base_notation_row_to_chess_row[row]

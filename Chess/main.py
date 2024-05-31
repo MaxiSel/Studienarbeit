@@ -74,7 +74,7 @@ def main():
                                 or ((game_status.black_token == True) and
                                     (game_status.board[player_clicks[1][0]][player_clicks[1][1]][0] == 'b'))):
                             field_selected = ()
-                            del player_clicks[0]  # Lenght is everytime 2
+                            player_clicks.remove(player_clicks[0])  # Last element )also .pop() would be valid
                             continue
 
                 if(len(player_clicks)==2):
@@ -93,7 +93,7 @@ def main():
                     #print(test.move_ID==possible_Moves[13].move_ID)
                     #print(mover in possible_Moves)
                     if mover in possible_Moves:
-                        print('ja')
+                        #print('ja')
                         game_status.movePiece(mover)
                         move_done=True
                         field_selected=()
