@@ -47,5 +47,5 @@ class Pawn(ChessPiece):
             #raise ValueError('undefinied Chess piece color')
         if None in moves:
             print('Bauer')
-        print(("bauer"),moves[len(moves)-1])
+        #print(("bauer"),moves[len(moves)-1])
         return moves

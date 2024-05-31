@@ -24,6 +24,8 @@ class Bishop(ChessPiece):
                 moves.append(
                     ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))
                 break
+            elif self.board[row_counter][column_counter][0]!=self.enermy_color:
+                break
         row_counter = self.row
         column_counter = self.column
         while (row_counter >= 1) and (column_counter >= 1):
@@ -35,6 +37,8 @@ class Bishop(ChessPiece):
             elif self.board[row_counter][column_counter][0] == self.enermy_color:
                 moves.append(
                     ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))
+                break
+            elif self.board[row_counter][column_counter][0]!=self.enermy_color:
                 break
         row_counter = self.row
         column_counter = self.column
@@ -48,6 +52,8 @@ class Bishop(ChessPiece):
                 moves.append(
                     ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))
                 break
+            elif self.board[row_counter][column_counter][0]!=self.enermy_color:
+                break
         row_counter = self.row
         column_counter = self.column
         while (row_counter >= 1) and (column_counter <= 6):
@@ -60,5 +66,7 @@ class Bishop(ChessPiece):
                 moves.append(
                     ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))
                 break
-        print('NBischof',moves[len(moves)-1])
+            elif self.board[row_counter][column_counter][0]!=self.enermy_color:
+                break
+        #print('NBischof',moves[len(moves)-1])
         return moves

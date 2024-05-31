@@ -108,7 +108,7 @@ class GameState():
                     print("HIER",moves[i])
                     #print(moves[i].__getattribute__(active_piece)
                     print(moves)
-                    print(moves[68])
+                    #print(moves[68])
                     print(len(moves))
                     print(moves[len(moves) - 1])
                     print(moves[len(moves)-1].active_piece)
@@ -221,13 +221,14 @@ class GameState():
                     # print(moves[1].move_ID)
                     # print(moves[1].origin_row,moves[1].origin_column,moves[1].goal_field_row,moves[1].goal_field_column)
                     # moves.append(self.calculatePawn(row,column,moves))
-        for i in range(1,len(moves)-1):
-            print("Zug",i,moves[i])
-            try:
-                print('Typ', moves[i].active_piece)
-            except:
-                print(moves[i])
-                print('WArning',i)
+        #for i in range(1,len(moves)-1):
+            #print("Zug",i,moves[i])
+            #try:
+                #print('Typ', moves[i].active_piece)
+            #pass
+            #except:
+                #print(moves[i])
+                #print('WArning',i)
 
         return moves
 
