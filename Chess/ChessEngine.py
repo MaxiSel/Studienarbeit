@@ -31,7 +31,7 @@ class GameState():
         self.black_king_position = (0, 4)
         self.check_mate = False
         self.Patt = False
-        self.inCheck = False
+        self.in_check = False
         self.pins = []
         self.checks = []
 
@@ -73,54 +73,65 @@ class GameState():
 
     def calculateMoves(self):
         moves = []
-        self.inCheck, self.pins, self.checks = self.checkForPinsAndChecks()
+        self.in_check, self.pins, self.checks = self.checkForPinsAndChecks()
+        print('in_checks', self.in_check, 'pins', self.pins, 'checks', self.checks)
         if self.white_token:
-            king_row=self.white_king_position[0]
+            king_row = self.white_king_position[0]
             king_column = self.white_king_position[1]
         elif self.black_token:
-            king_row=self.black_king_position[0]
+            king_row = self.black_king_position[0]
             king_column = self.black_king_position[1]
-        if self.inCheck:
-            if len(self.checks)==1:
-                moves =self.calculateEveryMove()
-                check=self.checks[0]
-                check_row=check[0]
-                check_column=check[1]
-                piece_check_giver=self.board[check_row][check_column]
-                valid_fields=[]
-                if piece_check_giver[1]=='N':
-                    valid_fields=[(check_row,check_column)]
+            print("KIng",king_row,king_column)
+        if self.in_check:
+            print('Check')
+            if len(self.checks) == 1:
+                print('Check1')
+                moves = self.calculateEveryMove()
+                print('moves', moves)
+                check = self.checks[0]
+                check_row = check[0]
+                check_column = check[1]
+                piece_check_giver = self.board[check_row][check_column]
+                valid_fields = []
+                if piece_check_giver[1] == 'N':
+                    valid_fields = [(check_row, check_column)]
                 else:
-                    for i in range(1,8):
-                        valid_field=(king_row+check[2]*i,king_column+check[3]*i)
+                    for i in range(1, 8):
+                        valid_field = (king_row + check[2] * i, king_column + check[3] * i)
                         valid_fields.appen(valid_field)
-                        if valid_field[0]==check_row and valid_field[1]==check_column:
+                        if valid_field[0] == check_row and valid_field[1] == check_column:
                             break
-                for i in range(len(moves)-1,-1,-1):
-                    if moves[i].active_piece!='K':
-                        if not(moves[i].goal_field_row,moves[i].goal_field_column) in valid_fields:
+                for i in range(len(moves) - 1, -1, -1):
+                    if moves[i].active_piece != 'K':
+                        if not (moves[i].goal_field_row, moves[i].goal_field_column) in valid_fields:
                             moves.remove(moves[i])
             else:
-                self.calculateKing(king_row,king_column,moves)
+                self.calculateKing(king_row, king_column, moves)
         else:
-            moves=self.calculateEveryMove()
-
-
+            print('FREI')
+            moves = self.calculateEveryMove()
+            print('No-Check',moves)
+        print('out-off',moves)
+        return moves
 
     def checkForPinsAndChecks(self):
         pins = []
         checks = []
         in_check = False
         enermy_color = ''
-        allied_color=''
-        origin_row = self.white_king_position[0]
-        origin_column = self.white_king_position[1]
+        allied_color = ''
+
+        print('black_token', self.black_token)
         if self.white_token:
             enermy_color = 'b'
             allied_color = 'w'
+            origin_row = self.white_king_position[0]
+            origin_column = self.white_king_position[1]
         elif self.black_token:
             enermy_color = 'w'
             allied_color = 'b'
+            origin_row = self.black_king_position[0]
+            origin_column = self.black_king_position[1]
 
         directions = ((-1, 0), (0, -1), (1, 0), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1))
         for j in range(len(directions)):
@@ -133,10 +144,14 @@ class GameState():
                     collide_piece = self.board[goal_field_row][goal_field_column]
                     if collide_piece[0] == allied_color:
                         if possible_pin == ():
+                            print('Ally')
                             possible_pin = (goal_field_row, goal_field_column, d[0], d[1])
                         else:
                             break
                     elif collide_piece[0] == enermy_color:
+                        print('alli',allied_color)
+                        print('enermy')
+                        print(enermy_color)
                         piece_type = collide_piece[1]
                         if (0 <= j < 3 and piece_type == 'R') \
                                 or (4 <= j <= 7 and piece_type == 'B') or \
@@ -144,27 +159,31 @@ class GameState():
                                  and ((enermy_color == 'w' and 6 <= j <= 7) or
                                       (enermy_color == 'b' and 4 <= j <= 5))) or (piece_type == 'Q') or (
                                 i == 1 and piece_type == 'K'):
-                            if possible_pin==():
-                                in_check=True
-                                checks.append((goal_field_row,goal_field_column,d[0],d[1]))
+                            if possible_pin == ():
+                                in_check = True
+                                print('Schachgeben',piece_type)
+                                print(self.board)
+                                print('Feind',self.board[goal_field_row+d[0]][goal_field_column+d[1]],goal_field_row,goal_field_column,d[0],d[1],goal_field_row+d[0],goal_field_column+d[1])
+                                checks.append((goal_field_row, goal_field_column, d[0], d[1]))
                                 break
                             else:
+                                print('HU')
                                 pins.append(possible_pin)
                                 break
                         else:
                             break
                 else:
                     break
-        knight_movement=((-2,-1),(-2,1),(-1,-2),(-1,2),(1,-2),(1,2),(2,-1),(2,1))
+        knight_movement = ((-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1))
         for m in knight_movement:
-            goal_field_row=origin_row+m[0]
+            goal_field_row = origin_row + m[0]
             goal_field_column = origin_row + m[1]
-            if 0<= goal_field_row<=7 and 0<=goal_field_column<=7:
-                collide_piece=self.board[goal_field_row][goal_field_column]
-                if collide_piece[0]==enermy_color and collide_piece[1]=='N':
-                    in_check=True
-                    checks.append((goal_field_row,goal_field_column,m[0],m[1]))
-        return in_check,pins,checks
+            if 0 <= goal_field_row <= 7 and 0 <= goal_field_column <= 7:
+                collide_piece = self.board[goal_field_row][goal_field_column]
+                if collide_piece[0] == enermy_color and collide_piece[1] == 'N':
+                    in_check = True
+                    checks.append((goal_field_row, goal_field_column, m[0], m[1]))
+        return in_check, pins, checks
 
     def calculateEveryMove(self):
         """

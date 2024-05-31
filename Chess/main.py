@@ -29,7 +29,8 @@ def main():
     clock= p.time.Clock()
     screen.fill(p.Color('lightblue'))
     game_status= ChessEngine.GameState()
-    possible_Moves = game_status.calculateEveryMove()
+    possible_Moves = game_status.calculateMoves()
+    print(possible_Moves[0].origin_row)
     #for i in range(len(possible_Moves)):
         #print(possible_Moves[i][1])
     move_done=False
@@ -56,8 +57,8 @@ def main():
                     #print(game_status.board[1][1])
                     #a=field_selected[0]
                     #k=field_selected[1]
-                    print(field_selected)
-                    print(player_clicks)
+                    #print(field_selected)
+                    #print(player_clicks)
                     #print(game_status.board[field_selected[0]][field_selected[1]])
                     if(len(player_clicks)==0):
                         if (game_status.checkField(field_selected)==True):
@@ -67,7 +68,7 @@ def main():
                             player_clicks = []
                     elif(len(player_clicks)==1):
                         player_clicks.append(field_selected)
-                        game_status.calculateEveryMove()
+                        game_status.calculateMoves()
 
                         #print(game_status.board[player_clicks[0]][player_clicks[1]][0])
                         if(((game_status.white_token == True) and(game_status.board[player_clicks[1][0]][player_clicks[1][1]][0] == 'w'))
@@ -107,11 +108,12 @@ def main():
                     game_status.revertMove()
                     field_selected = ()
                     player_clicks = []
-                    possible_Moves = game_status.calculateEveryMove()
+                    possible_Moves = game_status.calculateMoves()
         if move_done==True:
             #possible_Moves=game_status.calculateMoves()
-            #print('212',possible_Moves)
-            possible_Moves = game_status.calculateEveryMove()
+            print('212',possible_Moves)
+            possible_Moves = game_status.calculateMoves()
+            print('MAIN',possible_Moves)
             #print('501',possible_Moves)
             move_done = not move_done
             #print('move',move_done)
