@@ -68,5 +68,7 @@ class Bishop(ChessPiece):
                 break
             elif self.board[row_counter][column_counter][0]!=self.enermy_color:
                 break
-        #print('NBischof',moves[len(moves)-1])
+        if len(moves)!=0:
+            print(" Falscher Bischof")
+            print('NBischof',moves[len(moves)-1])
         return moves

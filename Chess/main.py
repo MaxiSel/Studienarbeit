@@ -86,7 +86,7 @@ def main():
                         continue
                     mover=ChessEngine.MoveHandler(player_clicks[0],player_clicks[1],game_status.board)
 
-                    #print(mover.getChessNotation())
+                    print(mover.getChessNotation())
                     #test= ChessEngine.MoveHandler((6,4),(4,4),game_status.board)
                     #print(mover.move_ID==possible_Moves[1].move_ID)
                     #print(test==possible_Moves[13])

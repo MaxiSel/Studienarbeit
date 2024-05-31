@@ -60,5 +60,7 @@ class Rook(ChessPiece):
                 break
         if None in moves:
             print('Turm')
-        #print('Türme',moves[len(moves)-1])
+        if len(moves)!=0:
+            print(" Falscher Turm")
+            print('Türme',moves[len(moves)-1])
         return moves

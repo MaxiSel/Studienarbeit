@@ -117,5 +117,7 @@ class Queen(ChessPiece):
                 break
         if None in moves:
             print('Queen')
-        #print('Königinnen', moves[len(moves)-1])
+        if len(moves) != 0:
+            print(" Falsche Königin")
+            print('Königinnen', moves[len(moves)-1])
         return moves

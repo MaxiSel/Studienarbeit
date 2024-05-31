@@ -111,7 +111,11 @@ class GameState():
                     #print(moves[68])
                     print(len(moves))
                     print(moves[len(moves) - 1])
-                    print(moves[len(moves)-1].active_piece)
+                    try:
+                        print(moves[len(moves)-1].active_piece)
+                    except:
+                        print("JUHIGFUTFTFFZF",moves)
+                        print(moves==moves[len(moves)-1])
                     print(moves[i].active_piece)
                     print(moves[i].goal_field_row)
                     print(moves[i].active_piece)
@@ -215,19 +219,21 @@ class GameState():
                         piece_color == 'b' and self.black_token == True):
                     piece_type = self.board[row][column][1]
                     moves = self.piece_map_function[piece_type](row, column, moves)
+                    #self.piece_map_function[piece_type](row, column, moves)
                     # print(moves)
                     # if len(moves)!=0:
                     #   pass
                     # print(moves[1].move_ID)
                     # print(moves[1].origin_row,moves[1].origin_column,moves[1].goal_field_row,moves[1].goal_field_column)
                     # moves.append(self.calculatePawn(row,column,moves))
-        #for i in range(1,len(moves)-1):
+        for i in range(1,len(moves)-1):
             #print("Zug",i,moves[i])
-            #try:
-                #print('Typ', moves[i].active_piece)
+            try:
+                print('Typ', moves[i].active_piece)
             #pass
-            #except:
-                #print(moves[i])
+            except:
+                print("ZGZGZGG")
+                print(moves[i])
                 #print('WArning',i)
 
         return moves

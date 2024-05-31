@@ -38,5 +38,7 @@ class Knight(ChessPiece):
                 moves.append(ChessEngine.MoveHandler((self.row, self.column), (self.row+1, self.column+2), self.board))
         if None in moves:
             print('Pferd')
-        #print('Pferde', moves)
+        if len(moves)!=0:
+            print(" Falscher Ritter")
+            print('Pferde', moves)
         return moves

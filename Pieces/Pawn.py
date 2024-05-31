@@ -8,7 +8,7 @@ class Pawn(ChessPiece):
             self.enermy_color = 'w'
         super(Pawn,self).__init__(row,column,color,board)
     def movement(self,moves):
-        #print(moves)
+        print("Anfang",moves)
         if self.color=='white':
             if self.board[self.row-1][self.column]=='--':
                 #print(ChessEngine.MoveHandler((self.row,self.column),(self.row-1,self.column),self.board))
@@ -25,6 +25,9 @@ class Pawn(ChessPiece):
                 if self.board[self.row-1][self.column+1][0]==self.enermy_color:
                     moves.append(
                         ChessEngine.MoveHandler((self.row , self.column), (self.row - 1, self.column + 1),self.board))
+            if len(moves) != 0:
+                print("Weißer Bauer")
+                print(moves[len(moves) - 1])
 
 
         elif self.color=='black':
@@ -42,7 +45,9 @@ class Pawn(ChessPiece):
                 if self.board[self.row+1][self.column+1][0]==self.enermy_color:
                     moves.append(
                         ChessEngine.MoveHandler((self.row , self.column), (self.row + 1, self.column + 1),self.board))
-
+            if len(moves) != 0:
+                print("Schwarzer Bauer")
+                print(moves[len(moves) - 1])
         #else:
             #raise ValueError('undefinied Chess piece color')
         if None in moves:
