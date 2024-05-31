@@ -81,12 +81,14 @@ class GameState():
         elif self.black_token:
             king_row = self.black_king_position[0]
             king_column = self.black_king_position[1]
-            print("KIng",king_row,king_column)
+            #print("King",king_row,king_column)
         if self.in_check:
             print('Check')
             if len(self.checks) == 1:
                 print('Check1')
                 moves = self.calculateEveryMove()
+                if None in moves:
+                    print('CIHH')
                 print('moves', moves)
                 check = self.checks[0]
                 check_row = check[0]
@@ -98,30 +100,39 @@ class GameState():
                 else:
                     for i in range(1, 8):
                         valid_field = (king_row + check[2] * i, king_column + check[3] * i)
-                        valid_fields.appen(valid_field)
+                        valid_fields.append(valid_field)
                         if valid_field[0] == check_row and valid_field[1] == check_column:
                             break
                 for i in range(len(moves) - 1, -1, -1):
-                    if moves[i].active_piece != 'K':
+                    print(i,len(moves))
+                    print("HIER",moves[i])
+                    #print(moves[i].__getattribute__(active_piece)
+                    print(moves)
+                    print(moves[68])
+                    print(len(moves))
+                    print(moves[len(moves) - 1])
+                    print(moves[len(moves)-1].active_piece)
+                    print(moves[i].active_piece)
+                    print(moves[i].goal_field_row)
+                    print(moves[i].active_piece)
+                    if moves[i].active_piece[1] != 'K':
                         if not (moves[i].goal_field_row, moves[i].goal_field_column) in valid_fields:
                             moves.remove(moves[i])
             else:
                 self.calculateKing(king_row, king_column, moves)
         else:
-            print('FREI')
+            #print('FREI')
             moves = self.calculateEveryMove()
-            print('No-Check',moves)
-        print('out-off',moves)
+            #print('No-Check',moves)
+        #print('out-off',moves)
         return moves
 
     def checkForPinsAndChecks(self):
         pins = []
         checks = []
         in_check = False
-        enermy_color = ''
-        allied_color = ''
 
-        print('black_token', self.black_token)
+        #print('black_token', self.black_token)
         if self.white_token:
             enermy_color = 'b'
             allied_color = 'w'
@@ -139,19 +150,22 @@ class GameState():
             possible_pin = ()
             for i in range(1, 8):
                 goal_field_row = origin_row + d[0] * i
-                goal_field_column = origin_column + d[0] * i
+                goal_field_column = origin_column + d[1] * i
+
                 if 0 <= goal_field_row < 8 and 0 <= goal_field_column < 8:
+                    #print("Feld", goal_field_row, goal_field_column)
                     collide_piece = self.board[goal_field_row][goal_field_column]
                     if collide_piece[0] == allied_color:
+                        #print('Allianz')
                         if possible_pin == ():
-                            print('Ally')
+                            #print('Ally')
                             possible_pin = (goal_field_row, goal_field_column, d[0], d[1])
                         else:
                             break
                     elif collide_piece[0] == enermy_color:
-                        print('alli',allied_color)
-                        print('enermy')
-                        print(enermy_color)
+                        #print('alli',allied_color)
+                        #print('enermy')
+                        #print(enermy_color)
                         piece_type = collide_piece[1]
                         if (0 <= j < 3 and piece_type == 'R') \
                                 or (4 <= j <= 7 and piece_type == 'B') or \
@@ -162,8 +176,8 @@ class GameState():
                             if possible_pin == ():
                                 in_check = True
                                 print('Schachgeben',piece_type)
-                                print(self.board)
-                                print('Feind',self.board[goal_field_row+d[0]][goal_field_column+d[1]],goal_field_row,goal_field_column,d[0],d[1],goal_field_row+d[0],goal_field_column+d[1])
+                                #print(self.board)
+                                #print('Feind',self.board[goal_field_row+d[0]][goal_field_column+d[1]],goal_field_row,goal_field_column,d[0],d[1],goal_field_row+d[0],goal_field_column+d[1])
                                 checks.append((goal_field_row, goal_field_column, d[0], d[1]))
                                 break
                             else:
@@ -172,8 +186,8 @@ class GameState():
                                 break
                         else:
                             break
-                else:
-                    break
+                #else:
+                 #   break
         knight_movement = ((-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1))
         for m in knight_movement:
             goal_field_row = origin_row + m[0]
@@ -195,16 +209,26 @@ class GameState():
         for row in range(len(self.board)):
             for column in range(len(self.board[row])):
                 piece_color = self.board[row][column][0]
+                #print(piece_color)
+                #print(self.black_token)
                 if (piece_color == 'w' and self.white_token == True) or (
                         piece_color == 'b' and self.black_token == True):
                     piece_type = self.board[row][column][1]
-                    self.piece_map_function[piece_type](row, column, moves)
+                    moves = self.piece_map_function[piece_type](row, column, moves)
                     # print(moves)
                     # if len(moves)!=0:
                     #   pass
                     # print(moves[1].move_ID)
                     # print(moves[1].origin_row,moves[1].origin_column,moves[1].goal_field_row,moves[1].goal_field_column)
                     # moves.append(self.calculatePawn(row,column,moves))
+        for i in range(1,len(moves)-1):
+            print("Zug",i,moves[i])
+            try:
+                print('Typ', moves[i].active_piece)
+            except:
+                print(moves[i])
+                print('WArning',i)
+
         return moves
 
     def calculatePawn(self, row, column, moves):
@@ -225,6 +249,8 @@ class GameState():
             # print("TR")
             # print(test_pawn.board)
             del test_pawn
+        if None in moves:
+            print('Bauer')
         return moves
 
     def calculateKnight(self, row, column, moves):
@@ -236,6 +262,8 @@ class GameState():
             test_knight = Pieces.Knight.Knight(row, column, 'black', self.board)
             moves.append(test_knight.movement(moves))
             del test_knight
+        if None in moves:
+            print('Knight')
         return moves
 
     def calculateRook(self, row, column, moves):
@@ -247,6 +275,8 @@ class GameState():
             test_rook = Pieces.Rook.Rook(row, column, 'black', self.board)
             moves.append(test_rook.movement(moves))
             del test_rook
+        if None in moves:
+            print('Turm')
         return moves
 
     def calculateBishop(self, row, column, moves):
@@ -258,6 +288,8 @@ class GameState():
             test_bishop = Pieces.Bishop.Bishop(row, column, 'black', self.board)
             moves.append(test_bishop.movement(moves))
             del test_bishop
+        if None in moves:
+            print('Bishop')
         return moves
 
     def calculateQueen(self, row, column, moves):
@@ -269,6 +301,8 @@ class GameState():
             test_queen = Pieces.Queen.Queen(row, column, 'black', self.board)
             moves.append(test_queen.movement(moves))
             del test_queen
+        if None in moves:
+            print('Queen')
         return moves
 
     def calculateKing(self, row, column, moves):
@@ -280,6 +314,8 @@ class GameState():
             test_king = Pieces.King.King(row, column, 'black', self.board)
             moves.append(test_king.movement(moves))
             del test_king
+        if None in moves:
+            print('King')
         return moves
 
 

@@ -30,7 +30,7 @@ def main():
     screen.fill(p.Color('lightblue'))
     game_status= ChessEngine.GameState()
     possible_Moves = game_status.calculateMoves()
-    print(possible_Moves[0].origin_row)
+    #print(possible_Moves[0].origin_row)
     #for i in range(len(possible_Moves)):
         #print(possible_Moves[i][1])
     move_done=False
@@ -111,9 +111,9 @@ def main():
                     possible_Moves = game_status.calculateMoves()
         if move_done==True:
             #possible_Moves=game_status.calculateMoves()
-            print('212',possible_Moves)
+            #print('212',possible_Moves)
             possible_Moves = game_status.calculateMoves()
-            print('MAIN',possible_Moves)
+            #print('MAIN',possible_Moves)
             #print('501',possible_Moves)
             move_done = not move_done
             #print('move',move_done)

@@ -36,3 +36,7 @@ class Knight(ChessPiece):
         if(self.row+1<=7) and (self.column+2<=7):
             if(self.board[self.row+1][self.column+2]=='--') or (self.board[self.row+1][self.column+2][0]==self.enermy_color):
                 moves.append(ChessEngine.MoveHandler((self.row, self.column), (self.row+1, self.column+2), self.board))
+        if None in moves:
+            print('Pferd')
+        print('Pferde', moves)
+        return moves

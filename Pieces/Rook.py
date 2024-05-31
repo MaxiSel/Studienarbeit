@@ -50,5 +50,7 @@ class Rook(ChessPiece):
                 moves.append(
                     ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))
                 break
-
+        if None in moves:
+            print('Turm')
+        print('Türme',moves[len(moves)-1])
         return moves

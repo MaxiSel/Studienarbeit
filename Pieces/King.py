@@ -51,3 +51,6 @@ class King(ChessPiece):
                     self.board[self.row][self.column - 1][0] == self.enermy_color):
                 moves.append(
                     ChessEngine.MoveHandler((self.row, self.column), (self.row, self.column - 1), self.board))
+        if None in moves:
+            print('König')
+        return moves
