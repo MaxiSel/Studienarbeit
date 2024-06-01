@@ -129,6 +129,21 @@ class GameState():
             moves = self.calculateEveryMove()
             #print('No-Check',moves)
         #print('out-off',moves)
+        print("ENDE")
+        print(len(moves))
+        #print(moves[1])
+        #print(moves[5][1])
+        #print(moves[3])
+        """error_counter=0
+        for i in range(len(moves)-1):
+            print(moves[i])
+            try:
+                print(moves[i].active_piece)
+            except:
+                print("ERROR")
+                error_counter+=1
+        print("ERROR_Counter",error_counter)
+"""
         return moves
 
     def checkForPinsAndChecks(self):
@@ -218,15 +233,21 @@ class GameState():
                 if (piece_color == 'w' and self.white_token == True) or (
                         piece_color == 'b' and self.black_token == True):
                     piece_type = self.board[row][column][1]
+                    print("EINS",moves)
+                    #moves=self.calculatePawn(row,column,moves)
+
                     moves = self.piece_map_function[piece_type](row, column, moves)
+                    print('ZWEI', moves)
+
                     #self.piece_map_function[piece_type](row, column, moves)
-                    # print(moves)
+                    #print("Raus")
+                    #print(len(moves),moves)
                     # if len(moves)!=0:
                     #   pass
                     # print(moves[1].move_ID)
                     # print(moves[1].origin_row,moves[1].origin_column,moves[1].goal_field_row,moves[1].goal_field_column)
                     # moves.append(self.calculatePawn(row,column,moves))
-        for i in range(1,len(moves)-1):
+        """for i in range(1,len(moves)-1):
             #print("Zug",i,moves[i])
             try:
                 print('Typ', moves[i].active_piece)
@@ -235,6 +256,7 @@ class GameState():
                 print("ZGZGZGG")
                 print(moves[i])
                 #print('WArning',i)
+        """
 
         return moves
 
@@ -243,8 +265,8 @@ class GameState():
         if self.white_token == True:
             test_pawn = Pieces.Pawn.Pawn(row, column, 'white', self.board)
             # print(moves)
-            moves.append(test_pawn.movement(moves))
-            # print(moves)
+            moves=test_pawn.movement(moves)
+            #print('Test',moves)
             # print("TR")
             # print(test_pawn.board)
             del test_pawn
@@ -263,11 +285,11 @@ class GameState():
     def calculateKnight(self, row, column, moves):
         if self.white_token == True:
             test_knight = Pieces.Knight.Knight(row, column, 'white', self.board)
-            moves.append(test_knight.movement(moves))
+            moves=test_knight.movement(moves)
             del test_knight
         if self.black_token == True:
             test_knight = Pieces.Knight.Knight(row, column, 'black', self.board)
-            moves.append(test_knight.movement(moves))
+            moves=test_knight.movement(moves)
             del test_knight
         if None in moves:
             print('Knight')
@@ -276,11 +298,11 @@ class GameState():
     def calculateRook(self, row, column, moves):
         if self.white_token == True:
             test_rook = Pieces.Rook.Rook(row, column, 'white', self.board)
-            moves.append(test_rook.movement(moves))
+            moves=test_rook.movement(moves)
             del test_rook
         if self.black_token == True:
             test_rook = Pieces.Rook.Rook(row, column, 'black', self.board)
-            moves.append(test_rook.movement(moves))
+            moves=test_rook.movement(moves)
             del test_rook
         if None in moves:
             print('Turm')
@@ -289,11 +311,11 @@ class GameState():
     def calculateBishop(self, row, column, moves):
         if self.white_token == True:
             test_bishop = Pieces.Bishop.Bishop(row, column, 'white', self.board)
-            moves.append(test_bishop.movement(moves))
+            moves=test_bishop.movement(moves)
             del test_bishop
         if self.black_token == True:
             test_bishop = Pieces.Bishop.Bishop(row, column, 'black', self.board)
-            moves.append(test_bishop.movement(moves))
+            moves=test_bishop.movement(moves)
             del test_bishop
         if None in moves:
             print('Bishop')
@@ -302,11 +324,11 @@ class GameState():
     def calculateQueen(self, row, column, moves):
         if self.white_token == True:
             test_queen = Pieces.Queen.Queen(row, column, 'white', self.board)
-            moves.append(test_queen.movement(moves))
+            moves=test_queen.movement(moves)
             del test_queen
         if self.black_token == True:
             test_queen = Pieces.Queen.Queen(row, column, 'black', self.board)
-            moves.append(test_queen.movement(moves))
+            moves=test_queen.movement(moves)
             del test_queen
         if None in moves:
             print('Queen')
@@ -315,11 +337,12 @@ class GameState():
     def calculateKing(self, row, column, moves):
         if self.white_token == True:
             test_king = Pieces.King.King(row, column, 'white', self.board)
-            moves.append(test_king.movement(moves))
+            moves=test_king.movement(moves)
+            print(moves)
             del test_king
         if self.black_token == True:
             test_king = Pieces.King.King(row, column, 'black', self.board)
-            moves.append(test_king.movement(moves))
+            moves=test_king.movement(moves)
             del test_king
         if None in moves:
             print('King')

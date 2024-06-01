@@ -62,5 +62,11 @@ class Rook(ChessPiece):
             print('Turm')
         if len(moves)!=0:
             print(" Falscher Turm")
-            print('Türme',moves[len(moves)-1])
+            for i in range(0, len(moves)):
+                print(moves[i])
+                try:
+                    print(moves[i].origin_row, moves[i].origin_column, moves[i].goal_field_row,
+                          moves[i].goal_field_column)
+                except:
+                    print("WARNING")
         return moves
