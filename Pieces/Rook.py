@@ -58,7 +58,7 @@ class Rook(ChessPiece):
                 break
             elif self.board[row_counter][column_counter][0]!=self.enermy_color:
                 break
-        if None in moves:
+        """if None in moves:
             print('Turm')
         if len(moves)!=0:
             print(" Falscher Turm")
@@ -68,5 +68,5 @@ class Rook(ChessPiece):
                     print(moves[i].origin_row, moves[i].origin_column, moves[i].goal_field_row,
                           moves[i].goal_field_column)
                 except:
-                    print("WARNING")
+                    print("WARNING")"""
         return moves

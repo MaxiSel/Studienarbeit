@@ -8,8 +8,7 @@ class Pawn(ChessPiece):
             self.enermy_color = 'w'
         super(Pawn,self).__init__(row,column,color,board)
     def movement(self,moves):
-        print("Anfang",moves)
-        test=moves
+        #print("Anfang",moves)
         if self.color=='white':
             if self.board[self.row-1][self.column]=='--':
                 #print(ChessEngine.MoveHandler((self.row,self.column),(self.row-1,self.column),self.board))
@@ -20,17 +19,15 @@ class Pawn(ChessPiece):
                 moves.append(ChessEngine.MoveHandler((self.row,self.column),(self.row-2,self.column),self.board))
             if (self.column-1>=0) :
                 if self.board[self.row-1][self.column-1][0]==self.enermy_color:
-                    print('Verrat')
                     moves.append(ChessEngine.MoveHandler((self.row,self.column),(self.row-1,self.column-1),self.board))
 
             if (self.column+1<=7):
                 if self.board[self.row-1][self.column+1][0]==self.enermy_color:
-                    print('Verrat')
                     moves.append(
                         ChessEngine.MoveHandler((self.row , self.column), (self.row - 1, self.column + 1),self.board))
             if len(moves) != 0:
-                print("Weißer Bauer")
-                print("Raus",moves)
+                #print("Weißer Bauer")
+                #print("Raus",moves)
                 """
                 test2 = [i for i in moves if i not in test]
                 for i in range(0, len(test2) - 1):
@@ -71,10 +68,10 @@ class Pawn(ChessPiece):
 
         #else:
             #raise ValueError('undefinied Chess piece color')
-        if None in moves:
+        """if None in moves:
             print('Bauer')
         #print(("bauer"),moves[len(moves)-1])
-        """if len(moves)!=0:
+        if len(moves)!=0:
             print(len(moves))
             print("Letzer",moves)
             for i in range(len(moves)):
@@ -84,5 +81,4 @@ class Pawn(ChessPiece):
                     print(moves[i].origin_row, moves[i].origin_column, moves[i].goal_field_row, moves[i].goal_field_column)
                 except:
                     print("WARNING")"""
-        print("GANZ Raus", moves)
         return moves

@@ -53,7 +53,7 @@ def main():
                     field_selected=()
                     player_clicks=[]
                 else:
-                    field_selected =(mouse_y_pos,mouse_x_pos)
+                    field_selected =(mouse_x_pos,mouse_y_pos)
                     #print(game_status.board[1][1])
                     #a=field_selected[0]
                     #k=field_selected[1]
@@ -63,11 +63,13 @@ def main():
                     if(len(player_clicks)==0):
                         if (game_status.checkField(field_selected)==True):
                             player_clicks.append(field_selected)
+                            print(field_selected)
                         else:
                             field_selected = ()
                             player_clicks = []
                     elif(len(player_clicks)==1):
                         player_clicks.append(field_selected)
+                        print(field_selected)
                         game_status.calculateMoves()
 
                         #print(game_status.board[player_clicks[0]][player_clicks[1]][0])

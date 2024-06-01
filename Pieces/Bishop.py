@@ -11,70 +11,27 @@ class Bishop(ChessPiece):
         super(Bishop, self).__init__(row, column, color, board)
 
     def movement(self, moves):
-        row_counter = self.row
-        column_counter = self.column
-        while (row_counter <= 6) and (column_counter <= 6):
-            row_counter += 1
-            column_counter += 1
-            #print(row_counter, column_counter)
-            if self.board[row_counter][column_counter] == '--':
-                moves.append(
-                    ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))
-            elif self.board[row_counter][column_counter][0] == self.enermy_color:
-                moves.append(
-                    ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))
-                break
-            elif self.board[row_counter][column_counter][0]!=self.enermy_color:
-                break
-        row_counter = self.row
-        column_counter = self.column
-        while (row_counter >= 1) and (column_counter >= 1):
-            row_counter -= 1
-            column_counter -= 1
-            if self.board[row_counter][column_counter] == '--':
-                moves.append(
-                    ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))
-            elif self.board[row_counter][column_counter][0] == self.enermy_color:
-                moves.append(
-                    ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))
-                break
-            elif self.board[row_counter][column_counter][0]!=self.enermy_color:
-                break
-        row_counter = self.row
-        column_counter = self.column
-        while (row_counter <= 6) and (column_counter >= 1):
-            row_counter += 1
-            column_counter -= 1
-            if self.board[row_counter][column_counter] == '--':
-                moves.append(
-                    ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))
-            elif self.board[row_counter][column_counter][0] == self.enermy_color:
-                moves.append(
-                    ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))
-                break
-            elif self.board[row_counter][column_counter][0]!=self.enermy_color:
-                break
-        row_counter = self.row
-        column_counter = self.column
-        while (row_counter >= 1) and (column_counter <= 6):
-            row_counter -= 1
-            column_counter += 1
-            if self.board[row_counter][column_counter] == '--':
-                moves.append(
-                    ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))
-            elif self.board[row_counter][column_counter][0] == self.enermy_color:
-                moves.append(
-                    ChessEngine.MoveHandler((self.row, self.column), (row_counter, column_counter), self.board))
-                break
-            elif self.board[row_counter][column_counter][0]!=self.enermy_color:
-                break
-        if len(moves)!=0:
-            print(" Falscher Bischof")
-            for i in range(0, len(moves)):
-                print(moves[i])
-                try:
-                    print(moves[i].origin_row, moves[i].origin_column, moves[i].goal_field_row,
-                          moves[i].goal_field_column)
-                except:
-                    print("WARNING")
+        directions=((1,1),(-1,1),(1,-1),(-1,-1))
+        #print("basis",self.row,self.column)
+        for d in directions:
+            for i in range(1,8):
+                goal_row=self.row+d[0]*i
+                goal_column=self.column+d[1]*i
+                if 0<=goal_row<8 and 0<= goal_column<8:
+                    collide_piece=self.board[goal_row][goal_column]
+                    #print(goal_row,goal_column,collide_piece)
+                    if collide_piece=='--':
+                        moves.append(ChessEngine.MoveHandler((self.row, self.column),
+                        (goal_row, goal_column),self.board))
+                    elif collide_piece[0]==self.enermy_color:
+                        moves.append(ChessEngine.MoveHandler((self.row, self.column),
+                        (goal_row, goal_column), self.board))
+                        break
+                    else:
+                        break
+                else:
+                    break
+        for i in range(len(moves)):
+            pass
+            #print(moves[i])
         return moves

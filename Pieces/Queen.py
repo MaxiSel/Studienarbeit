@@ -117,7 +117,7 @@ class Queen(ChessPiece):
                 break
         if None in moves:
             print('Queen')
-        if len(moves) != 0:
+        """if len(moves) != 0:
             print(" Falsche Königin")
             for i in range(0, len(moves)):
                 print(moves[i])
@@ -125,5 +125,5 @@ class Queen(ChessPiece):
                     print(moves[i].origin_row, moves[i].origin_column, moves[i].goal_field_row,
                           moves[i].goal_field_column)
                 except:
-                    print("WARNING")
+                    print("WARNING")"""
         return moves

@@ -53,12 +53,12 @@ class King(ChessPiece):
                     ChessEngine.MoveHandler((self.row, self.column), (self.row, self.column - 1), self.board))
         if None in moves:
             print('König')
-        if len(moves)!=0:
+        """if len(moves)!=0:
             for i in range(0, len(moves)):
                 print(moves[i])
                 try:
                     print(moves[i].origin_row, moves[i].origin_column, moves[i].goal_field_row,
                           moves[i].goal_field_column)
                 except:
-                    print("WARNING")
+                    print("WARNING")"""
         return moves

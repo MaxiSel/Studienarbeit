@@ -89,7 +89,7 @@ class GameState():
                 moves = self.calculateEveryMove()
                 if None in moves:
                     print('CIHH')
-                print('moves', moves)
+                #print('moves', moves)
                 check = self.checks[0]
                 check_row = check[0]
                 check_column = check[1]
@@ -104,26 +104,18 @@ class GameState():
                         if valid_field[0] == check_row and valid_field[1] == check_column:
                             break
                 for i in range(len(moves) - 1, -1, -1):
-                    print(i,len(moves))
-                    print("HIER",moves[i])
+                    #print(i,len(moves))
+                    #print("HIER",moves[i])
                     #print(moves[i].__getattribute__(active_piece)
-                    print(moves)
+                    #print(moves)
                     #print(moves[68])
-                    print(len(moves))
-                    print(moves[len(moves) - 1])
-                    try:
-                        print(moves[len(moves)-1].active_piece)
-                    except:
-                        print("JUHIGFUTFTFFZF",moves)
-                        print(moves==moves[len(moves)-1])
-                    print(moves[i].active_piece)
-                    print(moves[i].goal_field_row)
-                    print(moves[i].active_piece)
+                    #print(len(moves))
+                    #print(moves[len(moves) - 1])
                     if moves[i].active_piece[1] != 'K':
                         if not (moves[i].goal_field_row, moves[i].goal_field_column) in valid_fields:
                             moves.remove(moves[i])
             else:
-                self.calculateKing(king_row, king_column, moves)
+                moves=self.calculateKing(king_row, king_column, moves)
         else:
             #print('FREI')
             moves = self.calculateEveryMove()
@@ -188,7 +180,7 @@ class GameState():
                         piece_type = collide_piece[1]
                         if (0 <= j < 3 and piece_type == 'R') \
                                 or (4 <= j <= 7 and piece_type == 'B') or \
-                                (i == i and piece_type == 'P'
+                                (i == 1 and piece_type == 'P'
                                  and ((enermy_color == 'w' and 6 <= j <= 7) or
                                       (enermy_color == 'b' and 4 <= j <= 5))) or (piece_type == 'Q') or (
                                 i == 1 and piece_type == 'K'):
@@ -233,11 +225,10 @@ class GameState():
                 if (piece_color == 'w' and self.white_token == True) or (
                         piece_color == 'b' and self.black_token == True):
                     piece_type = self.board[row][column][1]
-                    print("EINS",moves)
-                    #moves=self.calculatePawn(row,column,moves)
+                    #print("EINS",moves)
 
                     moves = self.piece_map_function[piece_type](row, column, moves)
-                    print('ZWEI', moves)
+                    #print('ZWEI', moves)
 
                     #self.piece_map_function[piece_type](row, column, moves)
                     #print("Raus")
@@ -338,7 +329,7 @@ class GameState():
         if self.white_token == True:
             test_king = Pieces.King.King(row, column, 'white', self.board)
             moves=test_king.movement(moves)
-            print(moves)
+            #print(moves)
             del test_king
         if self.black_token == True:
             test_king = Pieces.King.King(row, column, 'black', self.board)
