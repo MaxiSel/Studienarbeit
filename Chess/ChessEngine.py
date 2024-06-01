@@ -273,7 +273,7 @@ class GameState():
         if self.black_token == True:
             test_pawn = Pieces.Pawn.Pawn(row, column, 'black', self.board)
             # print(moves)
-            moves.append(test_pawn.movement(moves))
+            moves=test_pawn.movement(moves)
             # print(moves)
             # print("TR")
             # print(test_pawn.board)
