@@ -35,7 +35,11 @@ class GameState():
         self.pins = []
         self.checks = []
 
+
+
     def movePiece(self, mover):
+        print('POS WEIS',self.white_king_position)
+        print('POS Schwarz', self.black_king_position)
         if (self.board[mover.origin_row][mover.origin_column] != '--'):
             self.board[mover.origin_row][mover.origin_column] = '--'
             self.board[mover.goal_field_row][mover.goal_field_column] = mover.active_piece
@@ -44,9 +48,15 @@ class GameState():
             self.black_token = not self.black_token
             # Update king, later with objects shifted
             if mover.active_piece == 'wK':
+                print('WEIß KÖNIG')
                 self.white_king_position = (mover.goal_field_row, mover.goal_field_column)
             elif mover.active_piece == 'bK':
+                print('SCHWARZ KÖNIG')
                 self.black_king_position = (mover.goal_field_row, mover.goal_field_column)
+
+            if mover.pawn_promote_move:
+                self.board[mover.goal_field_row][mover.goal_field_column]=mover.active_piece[0]+'Q'
+
 
     def checkField(self, player_select_field):
         """
@@ -153,6 +163,8 @@ class GameState():
             origin_row = self.black_king_position[0]
             origin_column = self.black_king_position[1]
 
+        print('ORIGINS',origin_row,origin_column)
+
         directions = ((-1, 0), (0, -1), (1, 0), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1))
         for j in range(len(directions)):
             d = directions[j]
@@ -185,6 +197,10 @@ class GameState():
                             if possible_pin == ():
                                 in_check = True
                                 print('Schachgeben',piece_type)
+                                if enermy_color=='w':
+                                    print('KÖNIG SCHWARZ',self.black_king_position)
+                                else:
+                                    print('KÖNIG WEI?',self.white_king_position)
                                 #print(self.board)
                                 #print('Feind',self.board[goal_field_row+d[0]][goal_field_column+d[1]],goal_field_row,goal_field_column,d[0],d[1],goal_field_row+d[0],goal_field_column+d[1])
                                 checks.append((goal_field_row, goal_field_column, d[0], d[1]))
@@ -198,9 +214,10 @@ class GameState():
                     break
         knight_movement = ((-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1))
         for m in knight_movement:
+            print(m)
             goal_field_row = origin_row + m[0]
-            goal_field_column = origin_row + m[1]
-            if 0 <= goal_field_row <= 7 and 0 <= goal_field_column <= 7:
+            goal_field_column = origin_column + m[1]
+            if 0 <= goal_field_row < 8 and 0 <= goal_field_column < 8:
                 collide_piece = self.board[goal_field_row][goal_field_column]
                 if collide_piece[0] == enermy_color and collide_piece[1] == 'N':
                     in_check = True
@@ -410,7 +427,11 @@ class MoveHandler():
         self.active_piece = board[self.origin_row][self.origin_column]
         self.captured_piece = board[self.goal_field_row][self.goal_field_column]
         self.move_ID = self.origin_row * 1000 + self.origin_column * 100 + self.goal_field_row * 10 + self.goal_field_column
-
+        self.pawn_promote_move=False
+        if ((self.active_piece=='wP' and self.goal_field_row==0) or
+                self.active_piece=='bP' and self.goal_field_row==7):
+            self.pawn_promote_move=True
+        self.promotion_choice=''#piece type to which to pawn should swap
         """
         Overide ==
         """

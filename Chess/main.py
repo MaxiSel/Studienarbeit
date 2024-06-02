@@ -29,10 +29,10 @@ def main():
     clock= p.time.Clock()
     screen.fill(p.Color('lightblue'))
     game_status= ChessEngine.GameState()
-    possible_Moves = game_status.calculateMoves()
-    #print(possible_Moves[0].origin_row)
-    #for i in range(len(possible_Moves)):
-        #print(possible_Moves[i][1])
+    possible_moves = game_status.calculateMoves()
+    #print(possible_moves[0].origin_row)
+    #for i in range(len(possible_moves)):
+        #print(possible_moves[i][1])
     move_done=False
     imageLoader()
     game_runs = True
@@ -54,69 +54,63 @@ def main():
                     player_clicks=[]
                 else:
                     field_selected =(mouse_y_pos,mouse_x_pos)
-                    print(player_clicks)
-                    #print(game_status.board[1][1])
-                    #a=field_selected[0]
-                    #k=field_selected[1]
-                    #print(field_selected)
-                    #print(player_clicks)
-                    #print(game_status.board[field_selected[0]][field_selected[1]])
+                    print('CLICK INIT',player_clicks)
                     if(len(player_clicks)==0):
                         if (game_status.checkField(field_selected)==True):
                             player_clicks.append(field_selected)
-                            print(field_selected)
+                            print('SELECT',field_selected)
                         else:
                             field_selected = ()
                             player_clicks = []
                     elif(len(player_clicks)==1):
                         player_clicks.append(field_selected)
-                        print(field_selected)
+                        print("FIELDS",field_selected)
                         game_status.calculateMoves()
 
-                        #print(game_status.board[player_clicks[0]][player_clicks[1]][0])
                         if(((game_status.white_token == True) and(game_status.board[player_clicks[1][0]][player_clicks[1][1]][0] == 'w'))
                                 or ((game_status.black_token == True) and
                                     (game_status.board[player_clicks[1][0]][player_clicks[1][1]][0] == 'b'))):
                             field_selected = ()
                             player_clicks.remove(player_clicks[0])  # Last element )also .pop() would be valid
+                            print('LÖSCHEN',player_clicks)
                             continue
 
                 if(len(player_clicks)==2):
+                    print("2",player_clicks)
                     #print(field_selected[1])
+                    """print("HIER",player_clicks[0][1])
                     if game_status.board[player_clicks[0][1]]=='--':
                         field_selected=()
                         del player_clicks[0]#Lenght is everytime 2
-                        continue
+                        continue"""
                     mover=ChessEngine.MoveHandler(player_clicks[0],player_clicks[1],game_status.board)
 
                     print(mover.getChessNotation())
-                    #test= ChessEngine.MoveHandler((6,4),(4,4),game_status.board)
-                    #print(mover.move_ID==possible_Moves[1].move_ID)
-                    #print(test==possible_Moves[13])
-                    #print('chess',possible_Moves[1].move_ID)
-                    #print(test.move_ID==possible_Moves[13].move_ID)
-                    #print(mover in possible_Moves)
-                    if mover in possible_Moves:
-                        game_status.movePiece(mover)
-                        move_done=True
-                        field_selected=()
-                        player_clicks=[]
+                    for i in range(len(possible_moves)):
+                        if mover == possible_moves[i]:
+                            game_status.movePiece(mover)
+                            move_done=True
+                            field_selected=()
+                            player_clicks=[]
+                            print('LÖ')
+                        else:
+                            field_selected=()
+                            player_clicks=[]
 
-                    else:
-                        field_selected = ()
-                        player_clicks = []
+                    #if move_done:
+                        #player_clicks = [field_selected]
             elif e.type==p.KEYDOWN:
                 if e.key == p.K_r:
                     game_status.revertMove()
                     field_selected = ()
                     player_clicks = []
-                    possible_Moves = game_status.calculateMoves()
+                    possible_moves = game_status.calculateMoves()
         if move_done==True:
-            #possible_Moves=game_status.calculateMoves()
-            #print('212',possible_Moves)
-            possible_Moves = game_status.calculateMoves()
-            #print('MAIN',possible_Moves)
-            #print('501',possible_Moves)
+            #possible_moves=game_status.calculateMoves()
+            #print('212',possible_moves)
+            possible_moves = game_status.calculateMoves()
+            #print('MAIN',possible_moves)
+            #print('501',possible_moves)
             move_done = not move_done
             #print('move',move_done)
 

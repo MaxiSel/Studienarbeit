@@ -30,9 +30,9 @@ class King(ChessPiece):
                         moves.append(ChessEngine.MoveHandler((self.row, self.column),
                         (goal_row, goal_column), self.board))
                     if self.allied_color == 'w':
-                        self.game_status_obj.white_king_position = (goal_row, goal_column)
+                        self.game_status_obj.white_king_position = (self.row, self.column)
                     elif self.allied_color == 'b':
-                        self.game_status_obj.black_king_position = (goal_row, goal_column)
+                        self.game_status_obj.black_king_position = (self.row, self.column)
         """if len(moves)!=0:
             for i in range(0, len(moves)):
                 print(moves[i])
