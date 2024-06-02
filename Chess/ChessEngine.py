@@ -248,10 +248,6 @@ class GameState():
                     #print("EINS",moves)
 
                     moves = self.piece_map_function[piece_type](row, column, moves)
-                    if len(moves) != 0:
-                        for i in range(len(moves)):
-                            print(moves[i].origin_row, moves[i].origin_column, moves[i].goal_field_row,
-                                  moves[i].goal_field_column, moves[i].move_is_enpassant_move)
                     #print('ZWEI', moves)
 
                     #self.piece_map_function[piece_type](row, column, moves)

@@ -86,8 +86,14 @@ def main():
                     mover=ChessEngine.MoveHandler(player_clicks[0],player_clicks[1],game_status.board)
 
                     print(mover.getChessNotation())
+                    """if len(possible_moves) != 0:
+                        for i in range(len(possible_moves)):
+                            print(possible_moves[i].origin_row, possible_moves[i].origin_column, possible_moves[i].goal_field_row,
+                                  possible_moves[i].goal_field_column, possible_moves[i].move_is_enpassant_move)"""
                     for i in range(len(possible_moves)):
                         if mover == possible_moves[i]:
+                            mover.move_is_enpassant_move=possible_moves[i].move_is_enpassant_move
+                            print("MOVER",mover.move_is_enpassant_move)
                             game_status.movePiece(mover)
                             move_done=True
                             field_selected=()
