@@ -7,6 +7,8 @@ class Queen(ChessPiece):
         elif color == 'black':
             self.enermy_color = 'w'
         super(Queen,self).__init__(row,column,color,board)
+        self.piece_is_pinned=False
+        self.pin_vector=()
     def movement(self,moves):
         row_counter = self.row
         column_counter = self.column

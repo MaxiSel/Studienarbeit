@@ -49,11 +49,12 @@ def main():
                 mouse_x_pos= mouse_pos[0]//SQUARE_Size
                 mouse_y_pos= mouse_pos[1]//SQUARE_Size
                # print(mouse_x_pos,mouse_y_pos)
-                if(field_selected==(mouse_x_pos,mouse_y_pos)):
+                if(field_selected==(mouse_y_pos,mouse_x_pos)):
                     field_selected=()
                     player_clicks=[]
                 else:
-                    field_selected =(mouse_x_pos,mouse_y_pos)
+                    field_selected =(mouse_y_pos,mouse_x_pos)
+                    print(player_clicks)
                     #print(game_status.board[1][1])
                     #a=field_selected[0]
                     #k=field_selected[1]
@@ -96,7 +97,7 @@ def main():
                     #print(test.move_ID==possible_Moves[13].move_ID)
                     #print(mover in possible_Moves)
                     if mover in possible_Moves:
-                        #print('ja')
+                        print('ja')
                         game_status.movePiece(mover)
                         move_done=True
                         field_selected=()

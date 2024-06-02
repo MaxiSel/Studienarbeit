@@ -87,8 +87,6 @@ class GameState():
             if len(self.checks) == 1:
                 print('Check1')
                 moves = self.calculateEveryMove()
-                if None in moves:
-                    print('CIHH')
                 #print('moves', moves)
                 check = self.checks[0]
                 check_row = check[0]
@@ -192,13 +190,12 @@ class GameState():
                                 checks.append((goal_field_row, goal_field_column, d[0], d[1]))
                                 break
                             else:
-                                print('HU')
                                 pins.append(possible_pin)
                                 break
                         else:
                             break
-                #else:
-                 #   break
+                else:
+                    break
         knight_movement = ((-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1))
         for m in knight_movement:
             goal_field_row = origin_row + m[0]
@@ -253,8 +250,20 @@ class GameState():
 
     def calculatePawn(self, row, column, moves):
         # print(self.white_token)
+        piece_pinned=False
+        pin_vector=()
+        for i in range(len(self.pins)-1,-1,-1):
+            if self.pins[i][0]==row and self.pins[i][1]==column:
+                print("JA")
+                piece_pinned=True
+                pin_vector=(self.pins[i][2],self.pins[i][3])
+                self.pins.remove(self.pins[i])
+                break
+
         if self.white_token == True:
             test_pawn = Pieces.Pawn.Pawn(row, column, 'white', self.board)
+            test_pawn.piece_is_pinned=piece_pinned
+            test_pawn.pin_vector=pin_vector
             # print(moves)
             moves=test_pawn.movement(moves)
             #print('Test',moves)
@@ -263,6 +272,7 @@ class GameState():
             del test_pawn
         if self.black_token == True:
             test_pawn = Pieces.Pawn.Pawn(row, column, 'black', self.board)
+            test_pawn.piece_is_pinned = piece_pinned
             # print(moves)
             moves=test_pawn.movement(moves)
             # print(moves)

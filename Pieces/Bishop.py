@@ -9,6 +9,8 @@ class Bishop(ChessPiece):
         elif color == 'black':
             self.enermy_color = 'w'
         super(Bishop, self).__init__(row, column, color, board)
+        self.piece_is_pinned=False
+        self.pin_vector=()
 
     def movement(self, moves):
         directions=((1,1),(-1,1),(1,-1),(-1,-1))
