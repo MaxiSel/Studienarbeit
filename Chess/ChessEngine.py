@@ -164,7 +164,7 @@ class GameState():
                 if 0 <= goal_field_row < 8 and 0 <= goal_field_column < 8:
                     #print("Feld", goal_field_row, goal_field_column)
                     collide_piece = self.board[goal_field_row][goal_field_column]
-                    if collide_piece[0] == allied_color:
+                    if (collide_piece[0] == allied_color) and (collide_piece[1]!='K'):
                         #print('Allianz')
                         if possible_pin == ():
                             #print('Ally')
