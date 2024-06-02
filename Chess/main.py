@@ -97,7 +97,6 @@ def main():
                     #print(test.move_ID==possible_Moves[13].move_ID)
                     #print(mover in possible_Moves)
                     if mover in possible_Moves:
-                        print('ja')
                         game_status.movePiece(mover)
                         move_done=True
                         field_selected=()

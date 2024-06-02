@@ -254,7 +254,6 @@ class GameState():
         pin_vector=()
         for i in range(len(self.pins)-1,-1,-1):
             if self.pins[i][0]==row and self.pins[i][1]==column:
-                print("JA")
                 piece_pinned=True
                 pin_vector=(self.pins[i][2],self.pins[i][3])
                 self.pins.remove(self.pins[i])
@@ -273,6 +272,7 @@ class GameState():
         if self.black_token == True:
             test_pawn = Pieces.Pawn.Pawn(row, column, 'black', self.board)
             test_pawn.piece_is_pinned = piece_pinned
+            test_pawn.pin_vector = pin_vector
             # print(moves)
             moves=test_pawn.movement(moves)
             # print(moves)
@@ -284,12 +284,24 @@ class GameState():
         return moves
 
     def calculateKnight(self, row, column, moves):
+        piece_pinned=False
+        pin_vector=()
+        for i in range(len(self.pins)-1,-1,-1):
+            if self.pins[i][0]==row and self.pins[i][1]==column:
+                piece_pinned=True
+                pin_vector=(self.pins[i][2],self.pins[i][3])
+                self.pins.remove(self.pins[i])
+                break
         if self.white_token == True:
             test_knight = Pieces.Knight.Knight(row, column, 'white', self.board)
+            test_knight.piece_is_pinned=piece_pinned
+            test_knight.pin_vector=pin_vector
             moves=test_knight.movement(moves)
             del test_knight
         if self.black_token == True:
             test_knight = Pieces.Knight.Knight(row, column, 'black', self.board)
+            test_knight.piece_is_pinned=piece_pinned
+            test_knight.pin_vector=pin_vector
             moves=test_knight.movement(moves)
             del test_knight
         if None in moves:
@@ -297,12 +309,24 @@ class GameState():
         return moves
 
     def calculateRook(self, row, column, moves):
+        piece_pinned=False
+        pin_vector=()
+        for i in range(len(self.pins)-1,-1,-1):
+            if self.pins[i][0]==row and self.pins[i][1]==column:
+                piece_pinned=True
+                pin_vector=(self.pins[i][2],self.pins[i][3])
+                self.pins.remove(self.pins[i])
+                break
         if self.white_token == True:
             test_rook = Pieces.Rook.Rook(row, column, 'white', self.board)
+            test_rook.piece_is_pinned=piece_pinned
+            test_rook.pin_vector=pin_vector
             moves=test_rook.movement(moves)
             del test_rook
         if self.black_token == True:
             test_rook = Pieces.Rook.Rook(row, column, 'black', self.board)
+            test_rook.piece_is_pinned=piece_pinned
+            test_rook.pin_vector=pin_vector
             moves=test_rook.movement(moves)
             del test_rook
         if None in moves:
@@ -310,12 +334,24 @@ class GameState():
         return moves
 
     def calculateBishop(self, row, column, moves):
+        piece_pinned=False
+        pin_vector=()
+        for i in range(len(self.pins)-1,-1,-1):
+            if self.pins[i][0]==row and self.pins[i][1]==column:
+                piece_pinned=True
+                pin_vector=(self.pins[i][2],self.pins[i][3])# sollte u.U. append sein, in Quellverwendungen aber so definiert
+                self.pins.remove(self.pins[i])
+                break
         if self.white_token == True:
             test_bishop = Pieces.Bishop.Bishop(row, column, 'white', self.board)
+            test_bishop.piece_is_pinned=piece_pinned
+            test_bishop.pin_vector=pin_vector
             moves=test_bishop.movement(moves)
             del test_bishop
         if self.black_token == True:
             test_bishop = Pieces.Bishop.Bishop(row, column, 'black', self.board)
+            test_bishop.piece_is_pinned=piece_pinned
+            test_bishop.pin_vector=pin_vector
             moves=test_bishop.movement(moves)
             del test_bishop
         if None in moves:
@@ -323,12 +359,24 @@ class GameState():
         return moves
 
     def calculateQueen(self, row, column, moves):
+        piece_pinned=False
+        pin_vector=()
+        for i in range(len(self.pins)-1,-1,-1):
+            if self.pins[i][0]==row and self.pins[i][1]==column:
+                piece_pinned=True
+                pin_vector=(self.pins[i][2],self.pins[i][3])
+                self.pins.remove(self.pins[i])
+                break
         if self.white_token == True:
             test_queen = Pieces.Queen.Queen(row, column, 'white', self.board)
+            test_queen.piece_is_pinned=piece_pinned
+            test_queen.pin_vector=pin_vector
             moves=test_queen.movement(moves)
             del test_queen
         if self.black_token == True:
             test_queen = Pieces.Queen.Queen(row, column, 'black', self.board)
+            test_queen.piece_is_pinned=piece_pinned
+            test_queen.pin_vector=pin_vector
             moves=test_queen.movement(moves)
             del test_queen
         if None in moves:

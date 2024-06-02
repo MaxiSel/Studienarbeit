@@ -7,6 +7,8 @@ class Knight(ChessPiece):
         elif color == 'black':
             self.enermy_color = 'w'
         super(Knight,self).__init__(row,column,color,board)
+        self.piece_is_pinned=False
+        self.pin_vector=()
     def movement(self,moves):
         directions = ((2, 1), (2, -1), (-2, 1), (-2, -1),(1, -2), (1, 2), (-1, 2), (-1, -2))
         for d in directions:

@@ -49,18 +49,21 @@ class Pawn(ChessPiece):
 
         elif self.color=='black':
             if self.board[self.row + 1][self.column] == '--':
-                # print(ChessEngine.MoveHandler((self.row,self.column),(self.row-1,self.column),self.board))
-                moves.append(ChessEngine.MoveHandler((self.row, self.column), (self.row + 1, self.column), self.board))
+                if not self.piece_is_pinned or self.pin_vector == (-1, 0):
+                    # print(ChessEngine.MoveHandler((self.row,self.column),(self.row-1,self.column),self.board))
+                    moves.append(ChessEngine.MoveHandler((self.row, self.column), (self.row + 1, self.column), self.board))
                 #print(moves)
-            if (self.row == 1) and (self.board[self.row + 2][self.column]=='--'):
-                moves.append(ChessEngine.MoveHandler((self.row, self.column), (self.row + 2, self.column), self.board))
+                    if (self.row == 1) and (self.board[self.row + 2][self.column]=='--'):
+                        moves.append(ChessEngine.MoveHandler((self.row, self.column), (self.row + 2, self.column), self.board))
             if (self.column-1>=0) :
                 if self.board[self.row+1][self.column-1][0]==self.enermy_color:
-                    moves.append(ChessEngine.MoveHandler((self.row,self.column),(self.row+1,self.column-1),self.board))
+                    if not self.piece_is_pinned or self.pin_vector == (1, -1):
+                        moves.append(ChessEngine.MoveHandler((self.row,self.column),(self.row+1,self.column-1),self.board))
 
             if (self.column+1<=7):
                 if self.board[self.row+1][self.column+1][0]==self.enermy_color:
-                    moves.append(
+                    if not self.piece_is_pinned or self.pin_vector == (1, 1):
+                        moves.append(
                         ChessEngine.MoveHandler((self.row , self.column), (self.row + 1, self.column + 1),self.board))
             """if len(moves) != 0:
                 print("Schwarzer Bauer")
