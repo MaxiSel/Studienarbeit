@@ -34,12 +34,13 @@ class GameState():
         self.in_check = False
         self.pins = []
         self.checks = []
+        self.enpassant_move_possible_field = ()
 
 
 
     def movePiece(self, mover):
-        print('POS WEIS',self.white_king_position)
-        print('POS Schwarz', self.black_king_position)
+        #print('POS WEIS',self.white_king_position)
+        #print('POS Schwarz', self.black_king_position)
         if (self.board[mover.origin_row][mover.origin_column] != '--'):
             self.board[mover.origin_row][mover.origin_column] = '--'
             self.board[mover.goal_field_row][mover.goal_field_column] = mover.active_piece
@@ -48,15 +49,21 @@ class GameState():
             self.black_token = not self.black_token
             # Update king, later with objects shifted
             if mover.active_piece == 'wK':
-                print('WEIß KÖNIG')
+                #print('WEIß KÖNIG')
                 self.white_king_position = (mover.goal_field_row, mover.goal_field_column)
             elif mover.active_piece == 'bK':
-                print('SCHWARZ KÖNIG')
+                #print('SCHWARZ KÖNIG')
                 self.black_king_position = (mover.goal_field_row, mover.goal_field_column)
 
             if mover.pawn_promote_move:
                 self.board[mover.goal_field_row][mover.goal_field_column]=mover.active_piece[0]+'Q'
-
+            print(mover.move_is_enpassant_move,mover.origin_row,mover.origin_column,mover.goal_field_row,mover.goal_field_column)
+            if mover.move_is_enpassant_move==True:
+                self.board[mover.origin_row][mover.goal_field_column]='--'
+            if mover.active_piece[1]=='P' and abs(mover.origin_row- mover.goal_field_row)==2:
+                self.enpassant_move_possible_field=(mover.origin_row+mover.goal_field_row//2,mover.goal_field_column)
+            else:
+                self.enpassant_move_possible_field=()
 
     def checkField(self, player_select_field):
         """
@@ -163,7 +170,7 @@ class GameState():
             origin_row = self.black_king_position[0]
             origin_column = self.black_king_position[1]
 
-        print('ORIGINS',origin_row,origin_column)
+        #print('ORIGINS',origin_row,origin_column)
 
         directions = ((-1, 0), (0, -1), (1, 0), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1))
         for j in range(len(directions)):
@@ -214,7 +221,6 @@ class GameState():
                     break
         knight_movement = ((-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1))
         for m in knight_movement:
-            print(m)
             goal_field_row = origin_row + m[0]
             goal_field_column = origin_column + m[1]
             if 0 <= goal_field_row < 8 and 0 <= goal_field_column < 8:
@@ -242,6 +248,10 @@ class GameState():
                     #print("EINS",moves)
 
                     moves = self.piece_map_function[piece_type](row, column, moves)
+                    if len(moves) != 0:
+                        for i in range(len(moves)):
+                            print(moves[i].origin_row, moves[i].origin_column, moves[i].goal_field_row,
+                                  moves[i].goal_field_column, moves[i].move_is_enpassant_move)
                     #print('ZWEI', moves)
 
                     #self.piece_map_function[piece_type](row, column, moves)
@@ -277,7 +287,7 @@ class GameState():
                 break
 
         if self.white_token == True:
-            test_pawn = Pieces.Pawn.Pawn(row, column, 'white', self.board)
+            test_pawn = Pieces.Pawn.Pawn(row, column, 'white', self.board,self.enpassant_move_possible_field)
             test_pawn.piece_is_pinned=piece_pinned
             test_pawn.pin_vector=pin_vector
             # print(moves)
@@ -287,7 +297,7 @@ class GameState():
             # print(test_pawn.board)
             del test_pawn
         if self.black_token == True:
-            test_pawn = Pieces.Pawn.Pawn(row, column, 'black', self.board)
+            test_pawn = Pieces.Pawn.Pawn(row, column, 'black', self.board,self.enpassant_move_possible_field)
             test_pawn.piece_is_pinned = piece_pinned
             test_pawn.pin_vector = pin_vector
             # print(moves)
@@ -419,7 +429,7 @@ class MoveHandler():
     chess_column_to_base_notation_column = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7, }
     base_notation_column_to_chess_column = {v: k for k, v in chess_column_to_base_notation_column.items()}
 
-    def __init__(self, origin_field, goal_field, board):
+    def __init__(self, origin_field, goal_field, board,move_is_enpassant_move=False):
         self.origin_row = origin_field[0]
         self.origin_column = origin_field[1]
         self.goal_field_row = goal_field[0]
@@ -432,10 +442,12 @@ class MoveHandler():
                 self.active_piece=='bP' and self.goal_field_row==7):
             self.pawn_promote_move=True
         self.promotion_choice=''#piece type to which to pawn should swap
-        """
-        Overide ==
-        """
+        self.move_is_enpassant_move=move_is_enpassant_move
 
+
+    """
+    Overide ==
+    """
     def __eq__(self, other):
         if isinstance(other, MoveHandler):
             return self.move_ID == other.move_ID

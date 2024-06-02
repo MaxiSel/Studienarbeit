@@ -72,11 +72,11 @@ def main():
                                     (game_status.board[player_clicks[1][0]][player_clicks[1][1]][0] == 'b'))):
                             field_selected = ()
                             player_clicks.remove(player_clicks[0])  # Last element )also .pop() would be valid
-                            print('LÖSCHEN',player_clicks)
+                            #print('LÖSCHEN',player_clicks)
                             continue
 
                 if(len(player_clicks)==2):
-                    print("2",player_clicks)
+                    #print("2",player_clicks)
                     #print(field_selected[1])
                     """print("HIER",player_clicks[0][1])
                     if game_status.board[player_clicks[0][1]]=='--':
@@ -92,7 +92,7 @@ def main():
                             move_done=True
                             field_selected=()
                             player_clicks=[]
-                            print('LÖ')
+                            #print('LÖ')
                         else:
                             field_selected=()
                             player_clicks=[]

@@ -1,7 +1,7 @@
 from Figure import ChessPiece
 from Chess import ChessEngine
 class Pawn(ChessPiece):
-    def __init__(self,row,column,color,board):
+    def __init__(self,row,column,color,board,enpassant_possible_field):
         if color == 'white':
             self.enermy_color = 'b'
         elif color == 'black':
@@ -9,9 +9,11 @@ class Pawn(ChessPiece):
         super(Pawn,self).__init__(row,column,color,board)
         self.piece_is_pinned=False
         self.pin_vector=()
+        self.enpassant_possible_field=enpassant_possible_field
     def movement(self,moves):
         #print("Anfang",moves)
         if self.color=='white':
+            print("ENPAS",self.enpassant_possible_field)
             if self.board[self.row-1][self.column]=='--':
 
                 if not self.piece_is_pinned or self.pin_vector==(-1,0):
@@ -24,12 +26,22 @@ class Pawn(ChessPiece):
                 if self.board[self.row-1][self.column-1][0]==self.enermy_color:
                     if not self.piece_is_pinned or self.pin_vector == (-1, -1):
                         moves.append(ChessEngine.MoveHandler((self.row,self.column),(self.row-1,self.column-1),self.board))
+                elif (self.row-1,self.column-1)==self.enpassant_possible_field:
+                    print('HIER')
+                    moves.append(
+                        ChessEngine.MoveHandler((self.row, self.column), (self.row - 1, self.column - 1), self.board,move_is_enpassant_move=True))
+
+
 
             if (self.column+1<=7):
                 if self.board[self.row-1][self.column+1][0]==self.enermy_color:
                     if not self.piece_is_pinned or self.pin_vector == (-1, 1):
                         moves.append(
                         ChessEngine.MoveHandler((self.row , self.column), (self.row - 1, self.column + 1),self.board))
+                elif (self.row - 1, self.column + 1) == self.enpassant_possible_field:
+                    print('DORT')
+                    moves.append(ChessEngine.MoveHandler((self.row, self.column), (self.row - 1, self.column + 1),self.board, move_is_enpassant_move=True))
+
             if len(moves) != 0:
                 #print("Weißer Bauer")
                 #print("Raus",moves)
@@ -59,12 +71,20 @@ class Pawn(ChessPiece):
                 if self.board[self.row+1][self.column-1][0]==self.enermy_color:
                     if not self.piece_is_pinned or self.pin_vector == (1, -1):
                         moves.append(ChessEngine.MoveHandler((self.row,self.column),(self.row+1,self.column-1),self.board))
+                    elif (self.row + 1, self.column - 1) == self.enpassant_possible_field:
+                        moves.append(
+                            ChessEngine.MoveHandler((self.row, self.column), (self.row + 1, self.column - 1),
+                                                    self.board, move_is_enpassant_move=True))
 
             if (self.column+1<=7):
                 if self.board[self.row+1][self.column+1][0]==self.enermy_color:
                     if not self.piece_is_pinned or self.pin_vector == (1, 1):
                         moves.append(
                         ChessEngine.MoveHandler((self.row , self.column), (self.row + 1, self.column + 1),self.board))
+                    elif (self.row - 1, self.column - 1) == self.enpassant_possible_field:
+                        moves.append(
+                            ChessEngine.MoveHandler((self.row, self.column), (self.row + 1, self.column + 1),
+                                                    self.board, move_is_enpassant_move=True))
             """if len(moves) != 0:
                 print("Schwarzer Bauer")
                 for i in range(0,len(moves)-1):
@@ -89,4 +109,8 @@ class Pawn(ChessPiece):
                     print(moves[i].origin_row, moves[i].origin_column, moves[i].goal_field_row, moves[i].goal_field_column)
                 except:
                     print("WARNING")"""
+        """if len(moves) != 0:
+            for i in range(len(moves)):
+                print(moves[i].origin_row, moves[i].origin_column, moves[i].goal_field_row, moves[i].goal_field_column,
+                      moves[i].move_is_enpassant_move)"""
         return moves
