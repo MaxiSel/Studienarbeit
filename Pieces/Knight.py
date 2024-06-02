@@ -8,20 +8,20 @@ class Knight(ChessPiece):
             self.enermy_color = 'w'
         super(Knight,self).__init__(row,column,color,board)
         self.piece_is_pinned=False
-        self.pin_vector=()
     def movement(self,moves):
         directions = ((2, 1), (2, -1), (-2, 1), (-2, -1),(1, -2), (1, 2), (-1, 2), (-1, -2))
         for d in directions:
             goal_row = self.row + d[0]
             goal_column = self.column + d[1]
             if 0 <= goal_row < 8 and 0 <= goal_column < 8:
-                collide_piece = self.board[goal_row][goal_column]
-                if collide_piece == '--':
-                    moves.append(ChessEngine.MoveHandler((self.row, self.column),
-                                                         (goal_row, goal_column), self.board))
-                elif collide_piece[0] == self.enermy_color:
-                    moves.append(ChessEngine.MoveHandler((self.row, self.column),
-                                                         (goal_row, goal_column), self.board))
+                if not self.piece_is_pinned:
+                    collide_piece = self.board[goal_row][goal_column]
+                    if collide_piece == '--':
+                        moves.append(ChessEngine.MoveHandler((self.row, self.column),
+                                                             (goal_row, goal_column), self.board))
+                    elif collide_piece[0] == self.enermy_color:
+                        moves.append(ChessEngine.MoveHandler((self.row, self.column),
+                                                             (goal_row, goal_column), self.board))
         """if None in moves:
             print('Pferd')
         if len(moves)!=0:

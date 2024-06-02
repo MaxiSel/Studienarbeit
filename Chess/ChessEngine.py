@@ -285,23 +285,19 @@ class GameState():
 
     def calculateKnight(self, row, column, moves):
         piece_pinned=False
-        pin_vector=()
         for i in range(len(self.pins)-1,-1,-1):
             if self.pins[i][0]==row and self.pins[i][1]==column:
                 piece_pinned=True
-                pin_vector=(self.pins[i][2],self.pins[i][3])
                 self.pins.remove(self.pins[i])
                 break
         if self.white_token == True:
             test_knight = Pieces.Knight.Knight(row, column, 'white', self.board)
             test_knight.piece_is_pinned=piece_pinned
-            test_knight.pin_vector=pin_vector
             moves=test_knight.movement(moves)
             del test_knight
         if self.black_token == True:
             test_knight = Pieces.Knight.Knight(row, column, 'black', self.board)
             test_knight.piece_is_pinned=piece_pinned
-            test_knight.pin_vector=pin_vector
             moves=test_knight.movement(moves)
             del test_knight
         if None in moves:
