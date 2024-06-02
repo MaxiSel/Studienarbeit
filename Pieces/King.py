@@ -8,51 +8,18 @@ class King(ChessPiece):
             self.enermy_color = 'w'
         super(King,self).__init__(row,column,color,board)
     def movement(self,moves):
-        if(self.row-1>=0)and(self.column-1>=0):
-            if (self.board[self.row -1][self.column - 1] == '--') or (
-                    self.board[self.row -1][self.column - 1][0] == self.enermy_color):
-                moves.append(ChessEngine.MoveHandler((self.row, self.column), (self.row - 1, self.column - 1), self.board))
-
-        if (self.row - 1 >= 0):
-            if (self.board[self.row - 1][self.column] == '--') or (
-                    self.board[self.row - 1][self.column][0] == self.enermy_color):
-                moves.append(
-                    ChessEngine.MoveHandler((self.row, self.column), (self.row - 1, self.column), self.board))
-        if (self.row - 1 >= 0) and (self.column + 1 <= 7):
-            if (self.board[self.row - 1][self.column + 1] == '--') or (
-                    self.board[self.row - 1][self.column + 1][0] == self.enermy_color):
-                moves.append(
-                    ChessEngine.MoveHandler((self.row, self.column), (self.row - 1, self.column + 1), self.board))
-
-        if  self.column + 1 <= 7:
-            if (self.board[self.row][self.column + 1] == '--') or (
-                    self.board[self.row][self.column + 1][0] == self.enermy_color):
-                moves.append(ChessEngine.MoveHandler((self.row, self.column), (self.row, self.column + 1), self.board))
-
-        if (self.row + 1 <= 7) and (self.column + 1 <= 7):
-            if (self.board[self.row + 1][self.column + 1] == '--') or (
-                    self.board[self.row + 1][self.column + 1][0] == self.enermy_color):
-                moves.append(
-                    ChessEngine.MoveHandler((self.row, self.column), (self.row + 1, self.column + 1), self.board))
-
-        if (self.row + 1 <= 7):
-            if (self.board[self.row + 1][self.column] == '--') or (
-                    self.board[self.row + 1][self.column][0] == self.enermy_color):
-                moves.append(
-                    ChessEngine.MoveHandler((self.row, self.column), (self.row + 1, self.column), self.board))
-        if (self.row + 1 <= 7) and (self.column - 1 >= 0):
-            if (self.board[self.row + 1][self.column - 1] == '--') or (
-                    self.board[self.row + 1][self.column - 1][0] == self.enermy_color):
-                moves.append(
-                    ChessEngine.MoveHandler((self.row, self.column), (self.row + 1, self.column - 1), self.board))
-
-        if self.column - 1 >= 0:
-            if (self.board[self.row][self.column - 1] == '--') or (
-                    self.board[self.row][self.column - 1][0] == self.enermy_color):
-                moves.append(
-                    ChessEngine.MoveHandler((self.row, self.column), (self.row, self.column - 1), self.board))
-        if None in moves:
-            print('König')
+        directions = ((1, 1), (-1, 1), (1, -1), (-1, -1), (1, 0), (-1, 0), (0, 1), (0, -1))
+        for d in directions:
+            goal_row = self.row + d[0]
+            goal_column = self.column + d[1]
+            if 0 <= goal_row < 8 and 0 <= goal_column < 8:
+                collide_piece = self.board[goal_row][goal_column]
+                if collide_piece == '--':
+                    moves.append(ChessEngine.MoveHandler((self.row, self.column),
+                                                         (goal_row, goal_column), self.board))
+                elif collide_piece[0] == self.enermy_color:
+                    moves.append(ChessEngine.MoveHandler((self.row, self.column),
+                                                         (goal_row, goal_column), self.board))
         """if len(moves)!=0:
             for i in range(0, len(moves)):
                 print(moves[i])
