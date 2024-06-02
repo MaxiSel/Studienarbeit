@@ -381,12 +381,14 @@ class GameState():
 
     def calculateKing(self, row, column, moves):
         if self.white_token == True:
-            test_king = Pieces.King.King(row, column, 'white', self.board)
+            #print(self.board)
+            test_king = Pieces.King.King(row, column, 'white',self)
             moves=test_king.movement(moves)
             #print(moves)
             del test_king
+            #print('Schwarzer König',self.black_king_position)
         if self.black_token == True:
-            test_king = Pieces.King.King(row, column, 'black', self.board)
+            test_king = Pieces.King.King(row, column, 'black', self)
             moves=test_king.movement(moves)
             del test_king
         if None in moves:

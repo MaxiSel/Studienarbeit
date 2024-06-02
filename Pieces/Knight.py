@@ -14,14 +14,13 @@ class Knight(ChessPiece):
             goal_row = self.row + d[0]
             goal_column = self.column + d[1]
             if 0 <= goal_row < 8 and 0 <= goal_column < 8:
-                if not self.piece_is_pinned:
-                    collide_piece = self.board[goal_row][goal_column]
-                    if collide_piece == '--':
-                        moves.append(ChessEngine.MoveHandler((self.row, self.column),
-                                                             (goal_row, goal_column), self.board))
-                    elif collide_piece[0] == self.enermy_color:
-                        moves.append(ChessEngine.MoveHandler((self.row, self.column),
-                                                             (goal_row, goal_column), self.board))
+                collide_piece = self.board[goal_row][goal_column]
+                if collide_piece == '--':
+                    moves.append(ChessEngine.MoveHandler((self.row, self.column),
+                                                         (goal_row, goal_column), self.board))
+                elif collide_piece[0] == self.enermy_color:
+                    moves.append(ChessEngine.MoveHandler((self.row, self.column),
+                                                         (goal_row, goal_column), self.board))
         """if None in moves:
             print('Pferd')
         if len(moves)!=0:
