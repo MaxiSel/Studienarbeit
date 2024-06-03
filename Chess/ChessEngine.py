@@ -58,12 +58,17 @@ class GameState():
                 self.black_king_position = (mover.goal_field_row, mover.goal_field_column)
 
             if mover.pawn_promote_move:
-                self.board[mover.goal_field_row][mover.goal_field_column]=mover.active_piece[0]+'Q'
+                promoted_piece=input("Q=Queen       N=Springer,     B=Läufer,   R=Turm")
+                try:
+                    self.board[mover.goal_field_row][mover.goal_field_column]=mover.active_piece[0]+promoted_piece
+                except:
+                    self.board[mover.goal_field_row][mover.goal_field_column] = mover.active_piece[0] + 'Q'
             print(mover.move_is_enpassant_move,mover.origin_row,mover.origin_column,mover.goal_field_row,mover.goal_field_column)
             if mover.move_is_enpassant_move==True:
                 self.board[mover.origin_row][mover.goal_field_column]='--'
             if mover.active_piece[1]=='P' and abs(mover.origin_row- mover.goal_field_row)==2:
-                self.enpassant_move_possible_field=(mover.origin_row+mover.goal_field_row//2,mover.goal_field_column)
+                self.enpassant_move_possible_field=((mover.origin_row+mover.goal_field_row)//2,mover.goal_field_column)
+                print('ENGINE',self.enpassant_move_possible_field)
             else:
                 self.enpassant_move_possible_field=()
 

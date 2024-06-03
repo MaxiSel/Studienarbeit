@@ -84,7 +84,7 @@ class Pawn(ChessPiece):
                     if not self.piece_is_pinned or self.pin_vector == (1, 1):
                         moves.append(
                         ChessEngine.MoveHandler((self.row , self.column), (self.row + 1, self.column + 1),self.board))
-                elif (self.row - 1, self.column - 1) == self.enpassant_possible_field:
+                elif (self.row + 1, self.column + 1) == self.enpassant_possible_field:
                     if not self.piece_is_pinned or self.pin_vector == (1, 1):
                         moves.append(
                             ChessEngine.MoveHandler((self.row, self.column), (self.row + 1, self.column + 1),
