@@ -45,6 +45,8 @@ class GameState():
             self.board[mover.origin_row][mover.origin_column] = '--'
             self.board[mover.goal_field_row][mover.goal_field_column] = mover.active_piece
             self.move_log.append(mover)
+            if mover.move_is_enpassant_move:
+                print("HGGG/(",mover.captured_piece)
             self.white_token = not self.white_token
             self.black_token = not self.black_token
             # Update king, later with objects shifted
@@ -87,6 +89,15 @@ class GameState():
                 self.white_king_position = (prev_move.origin_row, prev_move.origin_column)
             elif prev_move.active_piece == 'bK':
                 self.black_king_position = (prev_move.origin_row, prev_move.origin_column)
+            if prev_move.move_is_enpassant_move:
+                print("HIER",prev_move.captured_piece)
+                self.board[prev_move.goal_field_row][prev_move.goal_field_column]='--'
+                self.board[prev_move.origin_row][prev_move.goal_field_column]=prev_move.captured_piece
+                self.enpassant_move_possible_field=(prev_move.goal_field_row,prev_move.goal_field_column)
+            if prev_move.active_piece[1]=='P' and abs(prev_move.origin_row-prev_move.goal_field_row)==2:
+                self.enpassant_move_possible_field=()
+
+
 
     def calculateMoves(self):
         moves = []
@@ -239,7 +250,10 @@ class GameState():
         moves = []
         for row in range(len(self.board)):
             for column in range(len(self.board[row])):
-                piece_color = self.board[row][column][0]
+                try:
+                    piece_color = self.board[row][column][0]
+                except:
+                    print('BOARD',row,column,self.board[row][column],self.board)
                 #print(piece_color)
                 #print(self.black_token)
                 if (piece_color == 'w' and self.white_token == True) or (
@@ -439,6 +453,9 @@ class MoveHandler():
             self.pawn_promote_move=True
         self.promotion_choice=''#piece type to which to pawn should swap
         self.move_is_enpassant_move=move_is_enpassant_move
+        if move_is_enpassant_move:
+            self.captured_piece='wP' if self.active_piece=='bP' else 'bP'
+            print('DORT',self.captured_piece)
 
 
     """

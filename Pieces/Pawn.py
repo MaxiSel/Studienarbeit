@@ -13,7 +13,7 @@ class Pawn(ChessPiece):
     def movement(self,moves):
         #print("Anfang",moves)
         if self.color=='white':
-            print("ENPAS",self.enpassant_possible_field)
+            #print("ENPAS",self.enpassant_possible_field)
             if self.board[self.row-1][self.column]=='--':
 
                 if not self.piece_is_pinned or self.pin_vector==(-1,0):
@@ -27,8 +27,9 @@ class Pawn(ChessPiece):
                     if not self.piece_is_pinned or self.pin_vector == (-1, -1):
                         moves.append(ChessEngine.MoveHandler((self.row,self.column),(self.row-1,self.column-1),self.board))
                 elif (self.row-1,self.column-1)==self.enpassant_possible_field:
-                    print('HIER')
-                    moves.append(
+                    if not self.piece_is_pinned or self.pin_vector == (-1, -1):
+                    #print('HIER')
+                        moves.append(
                         ChessEngine.MoveHandler((self.row, self.column), (self.row - 1, self.column - 1), self.board,move_is_enpassant_move=True))
 
 
@@ -39,8 +40,9 @@ class Pawn(ChessPiece):
                         moves.append(
                         ChessEngine.MoveHandler((self.row , self.column), (self.row - 1, self.column + 1),self.board))
                 elif (self.row - 1, self.column + 1) == self.enpassant_possible_field:
-                    print('DORT')
-                    moves.append(ChessEngine.MoveHandler((self.row, self.column), (self.row - 1, self.column + 1),self.board, move_is_enpassant_move=True))
+                    if not self.piece_is_pinned or self.pin_vector == (-1, 1):
+                    #print('DORT')
+                        moves.append(ChessEngine.MoveHandler((self.row, self.column), (self.row - 1, self.column + 1),self.board, move_is_enpassant_move=True))
 
             if len(moves) != 0:
                 #print("Weißer Bauer")
@@ -71,7 +73,8 @@ class Pawn(ChessPiece):
                 if self.board[self.row+1][self.column-1][0]==self.enermy_color:
                     if not self.piece_is_pinned or self.pin_vector == (1, -1):
                         moves.append(ChessEngine.MoveHandler((self.row,self.column),(self.row+1,self.column-1),self.board))
-                    elif (self.row + 1, self.column - 1) == self.enpassant_possible_field:
+                elif (self.row + 1, self.column - 1) == self.enpassant_possible_field:
+                    if not self.piece_is_pinned or self.pin_vector == (1, -1):
                         moves.append(
                             ChessEngine.MoveHandler((self.row, self.column), (self.row + 1, self.column - 1),
                                                     self.board, move_is_enpassant_move=True))
@@ -81,7 +84,8 @@ class Pawn(ChessPiece):
                     if not self.piece_is_pinned or self.pin_vector == (1, 1):
                         moves.append(
                         ChessEngine.MoveHandler((self.row , self.column), (self.row + 1, self.column + 1),self.board))
-                    elif (self.row - 1, self.column - 1) == self.enpassant_possible_field:
+                elif (self.row - 1, self.column - 1) == self.enpassant_possible_field:
+                    if not self.piece_is_pinned or self.pin_vector == (1, 1):
                         moves.append(
                             ChessEngine.MoveHandler((self.row, self.column), (self.row + 1, self.column + 1),
                                                     self.board, move_is_enpassant_move=True))

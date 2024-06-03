@@ -92,9 +92,11 @@ def main():
                                   possible_moves[i].goal_field_column, possible_moves[i].move_is_enpassant_move)"""
                     for i in range(len(possible_moves)):
                         if mover == possible_moves[i]:
-                            mover.move_is_enpassant_move=possible_moves[i].move_is_enpassant_move
-                            print("MOVER",mover.move_is_enpassant_move)
-                            game_status.movePiece(mover)
+                            #mover.move_is_enpassant_move=possible_moves[i].move_is_enpassant_move
+                            #print("MOVER",mover.move_is_enpassant_move)
+                            #game_status.movePiece(mover)
+                            print("MOVER",possible_moves[i].move_is_enpassant_move)
+                            game_status.movePiece(possible_moves[i])
                             move_done=True
                             field_selected=()
                             player_clicks=[]
