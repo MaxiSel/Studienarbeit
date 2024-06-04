@@ -35,6 +35,28 @@ class GameState():
         self.pins = []
         self.checks = []
         self.enpassant_move_possible_field = ()
+        self.current_castle_rights=CastleRights(True,True,True,True)
+        self.castle_rights_log=[CastleRights(self.current_castle_rights.w_short,
+                                             self.current_castle_rights.w_long,
+                                             self.current_castle_rights.b_short,
+                                             self.current_castle_rights.b_long)]
+
+    def inCheck(self):
+        if self.white_token:
+            return self.squareUnderAttack(self.white_king_position[0],self.white_king_position[1])
+        elif self.black_token:
+            return self.squareUnderAttack(self.black_king_position[0],self.black_king_position[1])
+
+    def squareUnderAttack(self,row,column):
+        self.white_token = not self.white_token
+        self.black_token = not self.black_token
+        enermy_moves=self.calculateMoves()
+        self.white_token = not self.white_token
+        self.black_token = not self.black_token
+        for move in enermy_moves:
+            if move.goal_field_row ==row and move.goal_field_column==column:
+                return True
+        return False
 
 
 
@@ -72,6 +94,68 @@ class GameState():
             else:
                 self.enpassant_move_possible_field=()
 
+            if mover.is_castle_move:
+                if mover.goal_field_column-mover.origin_column==2:
+                    self.board[mover.goal_field_row][mover.goal_field_column-1]=self.board[mover.goal_field_row][mover.goal_field_column+1]
+                    self.board[mover.goal_field_row][mover.goal_field_column+1]='--'
+                else:
+                    self.board[mover.goal_field_row][mover.goal_field_column+1]=self.board[mover.goal_field_row][mover.goal_field_column-2]
+                    self.board[mover.goal_field_row][mover.goal_field_column-2]='--'
+
+
+            self.updateCastleRights(mover)
+            self.castle_rights_log.append(CastleRights(self.current_castle_rights.w_short,
+                                                   self.current_castle_rights.w_long,
+                                                   self.current_castle_rights.b_short,
+                                                   self.current_castle_rights.b_long))
+
+
+    def getCastleMoves(self,row,column,moves,allied_color):
+        if self.in_check:
+            return
+        if (self.white_token and self.current_castle_rights.w_short)\
+                or (self.black_token and self.current_castle_rights.b_short):
+            self.getKingsideCastleMoves(row,column,moves,allied_color)
+        if (self.white_token and self.current_castle_rights.w_long)\
+                or (self.black_token and self.current_castle_rights.b_long):
+            self.getQueensideCastleMoves(row,column,moves,allied_color)
+    def getKingsideCastleMoves(self,row,column,moves,allied_color):
+        if self.board[row][column+1]=='--' and self.board[row][column+2]=='--':
+            if not self.squareUnderAttack(row,column+1) and not self.squareUnderAttack(row,column+2):
+                moves.append(MoveHandler((row,column),
+                        (row, column+2), self.board,is_castle_move=True))
+
+
+    def getQueensideCastleMoves(self,row,column,moves,allied_color):
+        if self.board[row][column - 1] == '--' and self.board[row][column - 2] and self.board[row][column - 3] == '--':
+            if not self.squareUnderAttack(row,column - 1) and not self.squareUnderAttack(row, column - 2):
+                moves.append(MoveHandler((row, column),
+                                                     (row, column - 2), self.board, is_castle_move=True))
+
+
+
+
+    def updateCastleRights(self,mover):
+        if mover.active_piece=='wK':
+            self.current_castle_rights.w_short=False
+            self.current_castle_rights.w_long=False
+        elif mover.active_piece=='bK':
+            self.current_castle_rights.b_short=False
+            self.current_castle_rights.b_long=False
+        elif mover.active_piece=='wR':
+            if mover.origin_row==7:
+                if mover.origin_column==0:
+                    self.current_castle_rights.w_long=False
+                elif mover.origin_column==7:
+                    self.current_castle_rights.w_short=False
+        elif mover.active_piece=='bR':
+            if mover.origin_row==0:
+                if mover.origin_column==0:
+                    self.current_castle_rights.b_long=False
+                elif mover.origin_column==7:
+                    self.current_castle_rights.b_short=False
+
+
     def checkField(self, player_select_field):
         """
         Checks if mouse target field is empty
@@ -101,6 +185,17 @@ class GameState():
                 self.enpassant_move_possible_field=(prev_move.goal_field_row,prev_move.goal_field_column)
             if prev_move.active_piece[1]=='P' and abs(prev_move.origin_row-prev_move.goal_field_row)==2:
                 self.enpassant_move_possible_field=()
+            self.castle_rights_log.pop()
+            self.current_castle_rights=self.castle_rights_log[-1]
+
+            if prev_move.is_castle_move:
+                if prev_move.goal_field_column-prev_move.origin_column==2:
+                    self.board[prev_move.goal_field_row][prev_move.goal_field_column + 1] = self.board[prev_move.goal_field_row][prev_move.goal_field_column - 1]
+                    self.board[prev_move.goal_field_row][prev_move.goal_field_column - 1] = '--'
+                else:
+                    self.board[prev_move.goal_field_row][prev_move.goal_field_column - 2] = self.board[prev_move.goal_field_row][prev_move.goal_field_column + 1]
+                    self.board[prev_move.goal_field_row][prev_move.goal_field_column + 1] = '--'
+
 
 
 
@@ -444,7 +539,7 @@ class MoveHandler():
     chess_column_to_base_notation_column = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7, }
     base_notation_column_to_chess_column = {v: k for k, v in chess_column_to_base_notation_column.items()}
 
-    def __init__(self, origin_field, goal_field, board,move_is_enpassant_move=False):
+    def __init__(self, origin_field, goal_field, board,move_is_enpassant_move=False,is_castle_move=False):
         self.origin_row = origin_field[0]
         self.origin_column = origin_field[1]
         self.goal_field_row = goal_field[0]
@@ -460,7 +555,8 @@ class MoveHandler():
         self.move_is_enpassant_move=move_is_enpassant_move
         if move_is_enpassant_move:
             self.captured_piece='wP' if self.active_piece=='bP' else 'bP'
-            print('DORT',self.captured_piece)
+            #print('DORT',self.captured_piece)
+        self.is_castle_move = is_castle_move
 
 
     """
@@ -478,3 +574,11 @@ class MoveHandler():
 
     def getRowColumn(self, row, column):
         return self.base_notation_column_to_chess_column[column] + self.base_notation_row_to_chess_row[row]
+
+class CastleRights():
+    def __init__(self,w_short,w_long,b_short,b_long):
+        self.w_short=w_short
+        self.w_long=w_long
+        self.b_short=b_short
+        self.b_long=b_long
+

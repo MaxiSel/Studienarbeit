@@ -43,3 +43,26 @@ class King(ChessPiece):
                     print("WARNING")"""
         #self.game_status_obj.black_king_position = (7, 7)
         return moves
+    """
+    def getCastleMoves(self,row,column,moves,allied_color):
+        if self.in_check:
+            return
+        if (self.game_status_obj.white_Token and self.game_status_obj.current_castling_rights.w_short)\
+                or (self.game_status_obj.black_Token and self.game_status_obj.current_castling_rights.b_short):
+            self.getKingsideCastleMoves(row,column,moves,allied_color)
+        if (self.game_status_obj.white_Token and self.game_status_obj.current_castling_rights.w_long)\
+                or (self.game_status_obj.black_Token and self.game_status_obj.current_castling_rights.b_long):
+            self.getQueensideCastleMoves(row,column,moves,allied_color)
+    def getKingsideCastleMoves(self,row,column,moves,allied_color):
+        if self.board[row][column+1]=='--' and self.board[row][column+2]=='--':
+            if not self.game_status_obj.squareUnderAttack(row,column+1) and not self.game_status_obj.squareUnderAttack(row,column+2):
+                moves.append(ChessEngine.MoveHandler((row,column),
+                        (row, column+2), self.board,is_castle_move=True))
+
+
+    def getQueensideCastleMoves(self,row,column,moves,allied_color):
+        if self.board[row][column - 1] == '--' and self.board[row][column - 2] and self.board[row][column - 3] == '--':
+            if not self.game_status_obj.squareUnderAttack(row,column - 1) and not self.game_status_obj.squareUnderAttack(row, column - 2):
+                moves.append(ChessEngine.MoveHandler((row, column),
+                                                     (row, column - 2), self.board, is_castle_move=True))
+    """
