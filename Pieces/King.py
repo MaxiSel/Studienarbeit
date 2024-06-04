@@ -25,7 +25,7 @@ class King(ChessPiece):
                         self.game_status_obj.white_king_position=(goal_row,goal_column)
                     elif self.allied_color=='b':
                         self.game_status_obj.black_king_position = (goal_row, goal_column)
-                    in_check,pins,checks=self.game_status_obj.checkForPinsAndChecks()
+                    in_check,pins,checks=self.game_status_obj.checkForPinsAndChecks(goal_row, goal_column)
                     if not in_check:
                         moves.append(ChessEngine.MoveHandler((self.row, self.column),
                         (goal_row, goal_column), self.board))
