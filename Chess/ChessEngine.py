@@ -197,14 +197,11 @@ class GameState():
             self.board[prev_move.goal_field_row][prev_move.goal_field_column] = prev_move.captured_piece
             self.white_token = not self.white_token
             self.black_token = not self.black_token
-            # print('black',self.black_token,'white',self.white_token)
-            # Update king, later with objects shifted
             if prev_move.active_piece == 'wK':
                 self.white_king_position = (prev_move.origin_row, prev_move.origin_column)
             elif prev_move.active_piece == 'bK':
                 self.black_king_position = (prev_move.origin_row, prev_move.origin_column)
             if prev_move.move_is_enpassant_move:
-                print("HIER",prev_move.captured_piece)
                 self.board[prev_move.goal_field_row][prev_move.goal_field_column]='--'
                 self.board[prev_move.origin_row][prev_move.goal_field_column]=prev_move.captured_piece
                 self.enpassant_move_possible_field=(prev_move.goal_field_row,prev_move.goal_field_column)
@@ -214,7 +211,6 @@ class GameState():
             self.current_castle_rights=self.castle_rights_log[-1]
 
             if prev_move.is_castle_move:
-                #print("BGZG",self.current_castle_rights.w_short,self.current_castle_rights.w_long,self.current_castle_rights.b_short,self.current_castle_rights.b_long)
                 if prev_move.goal_field_column-prev_move.origin_column==2:
                     self.board[prev_move.goal_field_row][prev_move.goal_field_column + 1] = self.board[prev_move.goal_field_row][prev_move.goal_field_column - 1]
                     self.board[prev_move.goal_field_row][prev_move.goal_field_column - 1] = '--'
@@ -228,8 +224,6 @@ class GameState():
 
     def calculateMoves(self):
         moves = []
-        print("BGZG", self.castle_rights_log[-1].w_short, self.castle_rights_log[-1].w_long,
-              self.castle_rights_log[-1].b_short, self.castle_rights_log[-1].b_long)
         if self.white_token:
             origin_row = self.white_king_position[0]
             origin_column = self.white_king_position[1]
@@ -238,9 +232,6 @@ class GameState():
             origin_column = self.black_king_position[1]
         self.in_check, self.pins, self.checks = self.checkForPinsAndChecks(origin_row,origin_column)
 
-        #if len(moves)>=1:
-         #   print("DAFÜR", moves[-1].origin_row, moves[-1].origin_column, moves[-1].goal_field_row,
-          #    moves[-1].goal_field_column)
         print('in_checks', self.in_check, 'pins', self.pins, 'checks', self.checks)
         if self.white_token:
             king_row = self.white_king_position[0]
@@ -269,13 +260,6 @@ class GameState():
                         if valid_field[0] == check_row and valid_field[1] == check_column:
                             break
                 for i in range(len(moves) - 1, -1, -1):
-                    #print(i,len(moves))
-                    #print("HIER",moves[i])
-                    #print(moves[i].__getattribute__(active_piece)
-                    #print(moves)
-                    #print(moves[68])
-                    #print(len(moves))
-                    #print(moves[len(moves) - 1])
                     if moves[i].active_piece[1] != 'K':
                         if not (moves[i].goal_field_row, moves[i].goal_field_column) in valid_fields:
                             moves.remove(moves[i])

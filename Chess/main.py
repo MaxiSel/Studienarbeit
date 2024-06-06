@@ -64,7 +64,6 @@ def main():
                             player_clicks = []
                     elif(len(player_clicks)==1):
                         player_clicks.append(field_selected)
-                        print("FIELDS",field_selected)
                         game_status.calculateMoves()
 
                         if(((game_status.white_token == True) and(game_status.board[player_clicks[1][0]][player_clicks[1][1]][0] == 'w'))
@@ -72,12 +71,9 @@ def main():
                                     (game_status.board[player_clicks[1][0]][player_clicks[1][1]][0] == 'b'))):
                             field_selected = ()
                             player_clicks.remove(player_clicks[0])  # Last element )also .pop() would be valid
-                            #print('LÖSCHEN',player_clicks)
                             continue
 
                 if(len(player_clicks)==2):
-                    #print("2",player_clicks)
-                    #print(field_selected[1])
                     """print("HIER",player_clicks[0][1])
                     if game_status.board[player_clicks[0][1]]=='--':
                         field_selected=()
