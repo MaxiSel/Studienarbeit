@@ -91,16 +91,21 @@ def main():
                             print(possible_moves[i].origin_row, possible_moves[i].origin_column, possible_moves[i].goal_field_row,
                                   possible_moves[i].goal_field_column, possible_moves[i].move_is_enpassant_move)"""
                     for i in range(len(possible_moves)):
+                        if possible_moves[i].active_piece=='wK':
+                            print("HUIGZ",possible_moves[i].origin_row,possible_moves[i].origin_column,possible_moves[i].goal_field_row,possible_moves[i].goal_field_column)
+                    for i in range(len(possible_moves)):
                         if mover == possible_moves[i]:
                             #mover.move_is_enpassant_move=possible_moves[i].move_is_enpassant_move
                             #print("MOVER",mover.move_is_enpassant_move)
                             #game_status.movePiece(mover)
-                            print("MOVER",possible_moves[i].move_is_enpassant_move)
+                            #print("MOVER",possible_moves[i].move_is_enpassant_move)
+                            print("MOVER", possible_moves[i].is_castle_move)
                             game_status.movePiece(possible_moves[i])
                             move_done=True
                             field_selected=()
                             player_clicks=[]
                             #print('LÖ')
+                            print("MOVER2", possible_moves[i].is_castle_move)
                         else:
                             field_selected=()
                             player_clicks=[]

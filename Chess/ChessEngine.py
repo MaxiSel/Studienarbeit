@@ -95,6 +95,7 @@ class GameState():
                 self.enpassant_move_possible_field=()
 
             if mover.is_castle_move:
+                print('CASTLE')
                 if mover.goal_field_column-mover.origin_column==2:
                     self.board[mover.goal_field_row][mover.goal_field_column-1]=self.board[mover.goal_field_row][mover.goal_field_column+1]
                     self.board[mover.goal_field_row][mover.goal_field_column+1]='--'
@@ -110,15 +111,16 @@ class GameState():
                                                    self.current_castle_rights.b_long))
 
 
-    def getCastleMoves(self,row,column,moves,allied_color):
+    def getCastleMoves(self,row,column,moves):
         if self.in_check:
             return
         if (self.white_token and self.current_castle_rights.w_short)\
                 or (self.black_token and self.current_castle_rights.b_short):
-            self.getKingsideCastleMoves(row,column,moves,allied_color)
+            self.getKingsideCastleMoves(row,column,moves)
         if (self.white_token and self.current_castle_rights.w_long)\
                 or (self.black_token and self.current_castle_rights.b_long):
-            self.getQueensideCastleMoves(row,column,moves,allied_color)
+            self.getQueensideCastleMoves(row,column,moves)
+    """
     def getKingsideCastleMoves(self,row,column,moves,allied_color):
         if self.board[row][column+1]=='--' and self.board[row][column+2]=='--':
             if not self.squareUnderAttack(row,column+1) and not self.squareUnderAttack(row,column+2):
@@ -131,6 +133,7 @@ class GameState():
             if not self.squareUnderAttack(row,column - 1) and not self.squareUnderAttack(row, column - 2):
                 moves.append(MoveHandler((row, column),
                                                      (row, column - 2), self.board, is_castle_move=True))
+    """
 
 
 
@@ -154,6 +157,27 @@ class GameState():
                     self.current_castle_rights.b_long=False
                 elif mover.origin_column==7:
                     self.current_castle_rights.b_short=False
+
+
+
+    def getKingsideCastleMoves(self, row, column, moves):
+        if self.board[row][column + 1] == self.board[row][column + 2] == "--":
+            in_check1, pins1, checks1 = self.checkForPinsAndChecks(row, column + 1)
+            in_check2, pins2, checks2 = self.checkForPinsAndChecks(row, column + 2)
+            print("CHECK CASTLE",in_check1,in_check2)
+            if not in_check1 and not in_check2:
+                print("TEST1",row,column,self.board)
+                moves.append(MoveHandler((row,column),(row,column+2),self.board,is_castle_move=True))
+                print("HIERFÜR", moves[-1].origin_row,moves[-1].origin_column,moves[-1].goal_field_row,moves[-1].goal_field_column)
+    def getQueensideCastleMoves(self, row, column, moves):
+        if self.board[row][column-1] == '--' and self.board[row][column-2] == '--' and self.board[row][column-3] == '--':
+            in_check1, pins1, checks1 = self.checkForPinsAndChecks(row, column - 1)
+            in_check2, pins2, checks2 = self.checkForPinsAndChecks(row, column - 2)
+            if not in_check1 and not in_check2:
+                print("TEST2",row,column,self.board)
+                moves.append(MoveHandler((row, column), (row, column-2), self.board, is_castle_move=True))
+
+
 
 
     def checkField(self, player_select_field):
@@ -208,6 +232,10 @@ class GameState():
             origin_row = self.black_king_position[0]
             origin_column = self.black_king_position[1]
         self.in_check, self.pins, self.checks = self.checkForPinsAndChecks(origin_row,origin_column)
+
+        #if len(moves)>=1:
+         #   print("DAFÜR", moves[-1].origin_row, moves[-1].origin_column, moves[-1].goal_field_row,
+          #    moves[-1].goal_field_column)
         print('in_checks', self.in_check, 'pins', self.pins, 'checks', self.checks)
         if self.white_token:
             king_row = self.white_king_position[0]
@@ -251,6 +279,7 @@ class GameState():
         else:
             #print('FREI')
             moves = self.calculateEveryMove()
+            self.getCastleMoves(origin_row, origin_column, moves)
             #print('No-Check',moves)
         #print('out-off',moves)
         print("ENDE")
