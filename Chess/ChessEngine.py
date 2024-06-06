@@ -184,9 +184,10 @@ class GameState():
         """
         Checks if mouse target field is empty
         """
-        if self.board[player_select_field[0]][player_select_field[1]] == '--':
-            return False
-        return True
+        if len(player_select_field)!=0:
+            if self.board[player_select_field[0]][player_select_field[1]] == '--':
+                return False
+            return True
 
     def revertMove(self):
         if len(self.move_log) != 0:
@@ -213,9 +214,11 @@ class GameState():
             self.current_castle_rights=self.castle_rights_log[-1]
 
             if prev_move.is_castle_move:
+                #print("BGZG",self.current_castle_rights.w_short,self.current_castle_rights.w_long,self.current_castle_rights.b_short,self.current_castle_rights.b_long)
                 if prev_move.goal_field_column-prev_move.origin_column==2:
                     self.board[prev_move.goal_field_row][prev_move.goal_field_column + 1] = self.board[prev_move.goal_field_row][prev_move.goal_field_column - 1]
                     self.board[prev_move.goal_field_row][prev_move.goal_field_column - 1] = '--'
+
                 else:
                     self.board[prev_move.goal_field_row][prev_move.goal_field_column - 2] = self.board[prev_move.goal_field_row][prev_move.goal_field_column + 1]
                     self.board[prev_move.goal_field_row][prev_move.goal_field_column + 1] = '--'
@@ -225,6 +228,8 @@ class GameState():
 
     def calculateMoves(self):
         moves = []
+        print("BGZG", self.castle_rights_log[-1].w_short, self.castle_rights_log[-1].w_long,
+              self.castle_rights_log[-1].b_short, self.castle_rights_log[-1].b_long)
         if self.white_token:
             origin_row = self.white_king_position[0]
             origin_column = self.white_king_position[1]
